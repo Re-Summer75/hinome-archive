@@ -2,7 +2,8 @@
 
 火羽ひのめ 2022 年 10 月 10 日至 13 日四场 B 站直播的回放检索站。双语字幕、弹幕、醒目留言（SC）和上舰记录放在同一条时间线上，可以搜索、筛选，并跟着视频同步滚动。
 
-- 站点：<https://re-summer75.github.io/hinome-archive/>
+- 站点：<https://hinome.renode-editor.com/>（国内访问更快）
+- 备用：<https://re-summer75.github.io/hinome-archive/>（内容相同，每次更新同时发布到两处）
 - 视频：[BV1v1HN6YEyV](https://www.bilibili.com/video/BV1v1HN6YEyV)（四个分 P）
 
 ## 功能
