@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>火羽ひのめ 千舰史料 · 直播回放检索</title>
+<meta name="description" content="火羽ひのめ 2022 年 10 月 10 日–13 日直播回放：日文原文与中文翻译、弹幕、SC、上舰记录，可搜索、按观众筛选，点击任意一行跳到 B 站视频对应时间。">
+<link rel="icon" href="assets/cut_hdr_flower.webp">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="fan" viewBox="0 0 15 15"><g fill="none" stroke="#c7b08e" stroke-width="1.3" stroke-linecap="round" opacity=".7">
+    <path d="M11.5 1A10.5 10.5 0 0 1 1 11.5"/><path d="M5 1A4 4 0 0 1 1 5"/>
+    <path d="M4.7 2.5L10.3 4.9M3.8 3.8L8.2 8.2M2.5 4.7L4.9 10.3"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.8"/><path d="M13 13l4.5 4.5"/></g></symbol>
+  <symbol id="i-user" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="7" r="3.4"/><path d="M3.8 17c.9-3.3 3.3-5 6.2-5s5.3 1.7 6.2 5"/></g></symbol>
+  <symbol id="i-link" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 5.6l1.3-1.3a3.3 3.3 0 0 1 4.7 4.7l-1.3 1.3"/><path d="M10.8 14.4l-1.3 1.3a3.3 3.3 0 0 1-4.7-4.7l1.3-1.3"/></g></symbol>
+  <symbol id="i-out" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4h5v5"/><path d="M16 4l-7 7"/><path d="M14 11.5V15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3.5"/></g></symbol>
+  <symbol id="i-x" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-ctx" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 5h12M4 10h12M4 15h12"/><path d="M1.5 10h1" stroke-width="2.4"/></g></symbol>
+  <symbol id="i-play" viewBox="0 0 20 20"><path d="M6.5 4.3v11.4L15.8 10z" fill="currentColor"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 20 20"><path d="M5.5 4.5h3v11h-3zM11.5 4.5h3v11h-3z" fill="currentColor"/></symbol>
+  <symbol id="i-back10" viewBox="0 0 36 24"><text x="20.6" y="16" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="currentColor"><tspan>10</tspan><tspan dx=".6" font-size="9" font-weight="600">s</tspan></text><path d="M28.8 8.2v7.6L23.6 12zM34 8.2v7.6L28.8 12z" fill="currentColor"/></symbol>
+  <symbol id="i-fwd10" viewBox="0 0 36 24"><path d="M2 8.2v7.6L7.2 12zM7.2 8.2v7.6l5.2-3.8z" fill="currentColor"/><text x="15.4" y="16" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="currentColor"><tspan>10</tspan><tspan dx=".6" font-size="9" font-weight="600">s</tspan></text></symbol>
+  <symbol id="i-follow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/></g><path d="M3.6 8.6v6.8l5-3.4z" fill="currentColor"/></symbol>
+  <symbol id="i-goto" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12h12"/><path d="M10.5 7l5 5-5 5"/><path d="M20 5.5v13"/></g></symbol>
+  <symbol id="i-down" viewBox="0 0 20 20"><path d="M10 4v11M5 10.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 29 29"><circle cx="14.5" cy="14.5" r="12.9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14.5 7.5v7.2l4.9 2.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+</svg>
+
+<header class="top frame">
+  <img class="band" src="assets/cut_hdr_band.webp" alt="">
+  <svg class="fil tr"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
+  <img class="flower" src="assets/cut_hdr_flower.webp" alt="">
+  <div class="brand"><div class="bname">火羽ひのめ</div><div class="roma">HINOME</div></div>
+  <i class="vline"></i>
+  <div class="title">
+    <div class="t1">千舰史料 · 直播回放检索</div>
+    <div class="t2">2022.10.10 – 10.13 · 日文原文 / 中文翻译 / 弹幕 / SC</div>
+  </div>
+  <div class="status">
+    <div class="guards" title="大航海人数（舰长、提督、总督合计）">舰长<b id="sGuards">—</b><small>/ 1000</small></div>
+    <i class="ln l"><i class="dia"></i></i><div class="date" id="sDate">—</div><i class="ln r"><i class="dia"></i></i>
+    <div class="clock" title="推算的直播实况时间（北京时间）"><svg><use href="#i-clock"/></svg><span id="sClock">--:--:--</span></div>
+  </div>
+  <button class="about-btn" id="aboutBtn" type="button">说明</button>
+</header>
+
+<nav class="parts" id="parts" aria-label="分P"></nav>
+
+<div class="timeline frame" id="timeline">
+  <div class="tl-row">
+    <span class="tl-now" id="tlNow" title="视频时间">0:00:00</span>
+    <div class="tl-track" id="tlTrack" tabindex="0" role="slider" aria-label="视频进度：拖动或点击跳转，左右方向键前后 10 秒" aria-valuemin="0">
+      <canvas id="tlCanvas"></canvas>
+      <i class="tl-rail"></i><i class="tl-fill" id="tlFill"></i><i class="tl-head" id="tlHead"></i>
+      <div class="tl-tip" id="tlTip" hidden></div>
+    </div>
+    <span class="tl-len" id="tlLen">0:00:00</span>
+  </div>
+  <div class="ctl">
+    <div class="ctl-l">
+      <span class="real" title="推算的直播实况时间（北京时间）"><svg><use href="#i-clock"/></svg><span id="nReal">—</span></span>
+      <a class="ibtn bili" id="openBili" target="_blank" rel="noopener" title="在 B 站打开这一P，从当前时间接着看（清晰度更高）"><svg><use href="#i-out"/></svg><span class="bt">在B站打开<span class="bt2">当前位置</span></span></a>
+      <div class="sync" id="sync"></div>
+    </div>
+    <div class="transport">
+      <button type="button" class="tbtn skip" id="tBack" title="后退 10 秒（J）" aria-label="后退 10 秒"><svg><use href="#i-back10"/></svg></button>
+      <button type="button" class="tbtn main" id="tPlay" title="播放（空格）"><svg><use href="#i-play"/></svg></button>
+      <button type="button" class="tbtn skip" id="tFwd" title="前进 10 秒（L）" aria-label="前进 10 秒"><svg><use href="#i-fwd10"/></svg></button>
+    </div>
+    <div class="ctl-r">
+      <span class="nudge" id="nudge" hidden title="列表比视频慢就点 +，快就点 −（快捷键 ] 和 [），每个分P分别记住"><span class="nl">列表快慢</span><button type="button" data-nudge="-1" aria-label="列表慢 0.1 秒">−</button><b id="nudgeV">0.0s</b><button type="button" data-nudge="1" aria-label="列表快 0.1 秒">+</button></span>
+      <button type="button" class="ibtn txt spd" id="speed" hidden title="播放速度（点一下切换）">倍速</button>
+      <label class="ibtn tog" title="跟随播放：播放时三栏按视频时间自动滚动（点一下开关）"><input type="checkbox" id="follow" checked><svg><use href="#i-follow"/></svg></label>
+      <form class="goto" id="gotoForm"><button type="button" class="ibtn" id="gotoBtn" title="跳到指定时间" aria-label="跳到指定时间"><svg><use href="#i-goto"/></svg></button><input id="gotoInput" placeholder="1:23:45" inputmode="numeric" aria-label="跳到时间（如 1:23:45，回车）" tabindex="-1"></form>
+    </div>
+  </div>
+</div>
+
+<main class="layout" id="layout">
+  <section class="stage" id="stage">
+    <div class="player frame">
+      <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
+      <div class="screen" id="screen"><video id="vid" playsinline preload="auto"></video><iframe id="player" title="B站视频" allow="autoplay https://player.bilibili.com https://www.bilibili.com; encrypted-media https://player.bilibili.com https://www.bilibili.com" allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade" scrolling="no"></iframe>
+        <div class="hit" id="hitA" title="点画面播放 / 暂停（三栏同步），双击全屏"></div>
+        <div class="hit" id="hitB" title="点画面播放 / 暂停（三栏同步），双击全屏"></div>
+        <i class="buf" id="buf" hidden aria-hidden="true"></i>
+        <i class="cue" id="cue"><svg><use href="#i-play"/></svg></i></div>
+    </div>
+
+    <section class="pane sc frame" data-pane="sc" aria-label="醒目留言">
+      <img class="cut corner" src="assets/cut_sc_corner.webp" alt="">
+      <img class="cut charm" src="assets/cut_sc_charm.webp" alt="">
+      <div class="phd"><div class="ptitle"><b>SUPER CHAT</b><span>醒目留言<em id="countSC"></em></span></div></div>
+      <div class="list" tabindex="-1"><div class="spacer"></div></div>
+      <button class="back" type="button" hidden></button>
+    </section>
+  </section>
+
+  <section class="work">
+    <div class="tools">
+      <form class="search" id="qForm" role="search"><svg><use href="#i-search"/></svg>
+        <input id="q" type="search" placeholder="搜索字幕、弹幕、SC、观众名" autocomplete="off" spellcheck="false" aria-label="搜索">
+        <button class="go" type="submit">搜索</button></form>
+      <div class="who" id="whoBox">
+        <svg><use href="#i-user"/></svg>
+        <input id="who" placeholder="只看某位观众" autocomplete="off" spellcheck="false" aria-label="按观众筛选">
+        <button class="clear" id="whoClear" type="button" title="不再只看这位观众" hidden><svg><use href="#i-x"/></svg></button>
+        <button class="go" id="whoGo" type="button">搜索</button>
+        <div class="suggest" id="suggest" hidden></div>
+      </div>
+    </div>
+
+    <nav class="ptabs" id="ptabs" aria-label="分栏">
+      <button type="button" data-tab="subs" class="on">字幕<i id="tabSubs"></i></button>
+      <button type="button" data-tab="chat">弹幕<i id="tabChat"></i></button>
+      <button type="button" data-tab="sc">SC<i id="tabSC"></i></button>
+    </nav>
+
+    <div class="panes" id="panes">
+      <section class="pane subs frame show" data-pane="subs" aria-label="字幕">
+        <img class="cut charm knot" src="assets/cut_subs_right.webp" alt="">
+        <img class="cut corner" src="assets/cut_sc_corner.webp" alt="">
+        <div class="phd"><div class="ptitle"><b>SUBTITLES</b><span>字幕<em id="countSubs"></em></span></div></div>
+        <div class="cols"><span class="ja">日文原文</span><span class="zh">中文翻译</span>
+          <button class="chip mention" id="mention" type="button" hidden title="只看她念到或提到这位观众的字幕">提到 TA<i></i></button></div>
+        <div class="list" tabindex="-1"><div class="spacer"></div></div>
+        <button class="back" type="button" hidden></button>
+      </section>
+
+      <section class="pane chat frame" data-pane="chat" aria-label="弹幕">
+        <img class="cut corner" src="assets/cut_chat_corner.webp" alt="">
+        <img class="cut charm" src="assets/cut_chat_charm.webp" alt="">
+        <div class="phd"><div class="ptitle"><b>LIVE CHAT</b><span>弹幕<em id="countChat"></em></span></div></div>
+        <div class="chips" id="chips">
+          <button class="chip on" data-kind="chat" type="button">弹幕<i></i></button>
+          <button class="chip on" data-kind="guard" type="button">上舰<i></i></button>
+          <button class="chip" data-kind="gift" type="button">礼物<i></i></button>
+        </div>
+        <div class="list" tabindex="-1"><div class="spacer"></div></div>
+        <button class="back" type="button" hidden></button>
+      </section>
+    </div>
+  </section>
+
+  <div class="loading" id="loading"><img src="assets/camellia.webp" alt=""><span>载入中…</span></div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<dialog class="about frame" id="about" tabindex="-1">
+  <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
+  <h2>说明</h2>
+  <p>本页收录火羽ひのめ 2022 年 10 月 10 日至 13 日四场 B 站直播的回放字幕和直播间记录，对应 B 站视频
+    <a href="https://www.bilibili.com/video/BV1v1HN6YEyV" target="_blank" rel="noopener">BV1v1HN6YEyV</a> 的四个分 P。</p>
+  <ul>
+    <li><b>点字幕、弹幕或 SC 的任意一行</b>，视频就从那一行前两秒开始播放，其余几栏也跳到同一时间。</li>
+    <li><b>搜索</b>同时查字幕（日文和中文）、弹幕、SC 和观众名，结果分别列在各栏；按 <kbd>/</kbd> 直接开始输入，<kbd>Esc</kbd> 清空。</li>
+    <li><b>只看某位观众</b>：弹幕栏和 SC 栏只剩这位观众的内容；字幕栏照常，点「提到 TA」可以只看念到 TA 名字的字幕。点任何地方的观众名也一样。筛选和搜索时，各栏同样跟着播放进度高亮、滚动。</li>
+    <li>筛选或搜索时，每行的 <svg class="ico"><use href="#i-ctx"/></svg> 清掉筛选，回到完整时间线看前后；<svg class="ico"><use href="#i-link"/></svg> 复制带时间点的链接，别人打开就跳到同一处。</li>
+    <li><b>点画面</b>播放或暂停，双击全屏；进度条下方的按钮也一样：播放/暂停（空格）、后退 10 秒（J）、前进 10 秒（L）。这样操作，三栏始终和视频同步。</li>
+    <li><b>顶部的进度条</b>管整个分 P：拖动时三栏跟着走，松手视频跳过去；鼠标停在上面能看到那一刻的时间、舰长数和她说的话。条上淡金色的起伏是弹幕热度，彩色短线是 SC，菱形是舰长每满 100 的时刻；搜索或只看某位观众时，命中的位置也会标在条上。</li>
+    <li><b>同步是逐帧精确的</b>：视频就在本页播放，三栏按它的真实播放位置实时跟随；点画面或任意一行即时跳转、暂停，还能用<b>「倍速」</b>按钮加速（1 / 1.25 / 1.5 / 2 倍）。手机和电脑都一样逐帧同步。</li>
+    <li>若在取不到流的环境（比如太旧的浏览器）打开，页面会自动退回 B 站外链播放器，此时为估算同步，可用进度条下方的<b>「列表快慢」</b> − / + 微调（快捷键 <kbd>]</kbd> <kbd>[</kbd>），每个分P分别记住。</li>
+    <li>自己滚动某一栏后，那一栏就不再跟随，点「回到当前」恢复。</li>
+    <li><b>SC 栏</b>和直播间一样新的在上：跟随播放时当前这条停在最上面，左侧朱红竖线标出；新的 SC 从上方推进来。</li>
+    <li>本页播放为 360P（省流量、加载快）；想看高清请点「在B站打开当前位置」。</li>
+  </ul>
+  <h3>数据</h3>
+  <ul>
+    <li><b>字幕</b>：三个语音识别模型听写，Gemini 整理翻译，再经二审、三审，与视频里的字幕一致。难免有误，请保持怀疑。</li>
+    <li><b>弹幕、SC、上舰、礼物</b>：录播时同步保存的原始记录，弹幕原样收录。SC 的中文译文与视频里一致。礼物只列付费礼物。</li>
+    <li>弹幕里观众替主播翻译的同传真假参半，字幕翻译没有参考它们。</li>
+    <li><b>头像</b>：取自录播里 SC 和礼物记录附带的头像（当时的头像）；弹幕记录本身不带头像，只发过弹幕的观众显示名字的首字。</li>
+    <li><b>北京时间</b>：按弹幕发送时间推算的直播实况时间，仅供参考；10 号录像有两处断档。</li>
+    <li><b>舰长数</b>：第三方统计站 vtbs.moe 的历史记录，两次记录之间按上舰消息逐个累加，仅供参考。</li>
+  </ul>
+  <form method="dialog"><button class="btn">知道了</button></form>
+</dialog>
+
+<script src="stream.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
