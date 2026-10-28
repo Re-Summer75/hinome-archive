@@ -1019,10 +1019,16 @@ function suggest() {
   out.sort((a, b) => S.activity[b] - S.activity[a]);
   sugg = out; suggAt = v && sugg.length ? 0 : -1;
   box.scrollTop = 0;
-  box.innerHTML = (sugg.length ? `<div class="sh">${v ? `找到 ${num(sugg.length)} 位` : `这一P全部 ${num(sugg.length)} 位观众，按发言条数排`}</div>` : "")
-    + (sugg.length ? sugg.map((n, j) => `<button type="button" data-n="${n}" class="${j === suggAt ? "hl" : ""}${n === S.who ? " on" : ""}">${avHTML(n, 22)}`
-        + `<span class="n">${esc(S.d.names[n])}</span><span class="c">${S.activity[n]} 条</span></button>`).join("")
-       : `<div class="sh">这一P没有这位观众</div>`);
+  const head = `<div class="sh"><span>${!sugg.length ? "这一P没有这位观众" : v ? `找到 ${num(sugg.length)} 位` : `这一P全部 ${num(sugg.length)} 位观众，按发言条数排`}</span>`
+    + `<button type="button" class="shut" data-shut>收起</button></div>`;
+  const rows = sugg.map((n, j) => `<button type="button" data-n="${n}" class="${j === suggAt ? "hl" : ""}${n === S.who ? " on" : ""}">${avHTML(n, 22)}`
+    + `<span class="n">${esc(S.d.names[n])}</span><span class="c">${S.activity[n]} 条</span></button>`).join("");
+  box.innerHTML = S.mobile ? rows + head : head + rows;   // the 收起 row next to the box: under the list on a phone
+  if (S.mobile) {   // upward from both boxes and as wide as them, into the room above (see style.css)
+    const who = $("whoBox"), wr = who.getBoundingClientRect(), tr = who.parentElement.getBoundingClientRect();
+    box.style.left = `${tr.left - wr.left - who.clientLeft}px`;
+    box.style.maxHeight = `${Math.max(150, wr.top - 12)}px`;
+  } else box.style.left = box.style.maxHeight = "";
   box.hidden = false;
   S.suggBar?.update();
 }
@@ -1094,7 +1100,7 @@ function wire() {
       e.preventDefault();
       const down = e.key === "ArrowDown", n = sugg.length;
       suggAt = suggAt < 0 ? (down ? 0 : n - 1) : (suggAt + (down ? 1 : n - 1)) % n;
-      const items = [...box.querySelectorAll("button")];
+      const items = [...box.querySelectorAll("button[data-n]")];
       items.forEach((b, j) => b.classList.toggle("hl", j === suggAt));
       items[suggAt]?.scrollIntoView({ block: "nearest" });
     } else if (e.key === "Enter") {
@@ -1108,6 +1114,7 @@ function wire() {
     if (S.d) $("who").value = S.who == null ? "" : S.d.names[S.who];   // typed but not chosen: show what applies
   }, 150));
   $("suggest").addEventListener("mousedown", e => {
+    if (e.target.closest("[data-shut]")) { e.preventDefault(); $("suggest").hidden = true; $("who").blur(); return; }   // and the keyboard
     const b = e.target.closest("[data-n]");
     if (b) { e.preventDefault(); setWho(+b.dataset.n); $("who").blur(); }
   });
