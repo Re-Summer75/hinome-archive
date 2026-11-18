@@ -478,13 +478,13 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .ed { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .ed-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
 @container subs (min-width: 560px) { .ed-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); } }
-.ed-t, .ed-note, .mine-id input { width: 100%; box-sizing: border-box; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px;
+.ed-t, .ed-note, .mine-id input, #keyIn { width: 100%; box-sizing: border-box; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px;
   background: rgba(0, 0, 0, .3); color: var(--cream); font: inherit; outline: none; }
 .ed-t { display: block; resize: none; overflow: hidden; line-height: 1.55; }
 .ed-t[data-f="ja"] { font: 400 13.5px/1.55 var(--jp); }
 .ed-t[data-f="zh"] { font: 500 15px/1.55 var(--sans); }
 .ed-note { font-size: 12.5px; }
-.ed-t:focus, .ed-note:focus, .mine-id input:focus { border-color: var(--gold); }
+.ed-t:focus, .ed-note:focus, .mine-id input:focus, #keyIn:focus { border-color: var(--gold); }
 .ed-btns { display: flex; align-items: center; gap: 8px; }
 .ed-btns .btn { padding: 3px 10px; }
 .ed-hint { margin-left: auto; font-size: 11.5px; color: var(--mute2); }
@@ -521,8 +521,11 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .mine-foot { margin-top: 14px; }
 .keybox { max-width: 440px; }
 .keybox p { margin: 0 0 10px; }
-#keyIn { flex: 1; letter-spacing: 2px; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.keybox .key-form { margin-top: 14px; text-align: left; }   /* the key on its own line, the buttons under it together */
+#keyIn { display: block; padding: 7px 10px; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; font-variant-numeric: tabular-nums; }   /* 16px: iOS does not zoom in on it */
 #keyIn::placeholder { letter-spacing: 1px; }
+.keybox .mr-err { margin: 6px 0 0; }
+.key-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 .mine-send { justify-content: flex-end; margin-top: 8px; }
 .mine-list { display: flex; flex-direction: column; gap: 6px; }
 .mitem { padding: 7px 10px 8px; border: 1px solid var(--line2); border-radius: 4px; background: rgba(0, 0, 0, .2); }

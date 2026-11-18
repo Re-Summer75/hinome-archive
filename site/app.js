@@ -1760,6 +1760,7 @@ function wire() {
   $("rvNext").addEventListener("click", () => reviewGo(1));
   $("rvExit").addEventListener("click", stopReview);
   $("keyForm").addEventListener("submit", bindKey);
+  $("keyCancel").addEventListener("click", () => $("keyBox").close());
   $("keyBox").addEventListener("close", () => { afterKey = null; });
   $("mineKeyBtn").addEventListener("click", () => askKey());
   $("mineUnbind").addEventListener("click", unbindMe);

@@ -178,10 +178,9 @@
   <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
   <h2>校对密钥</h2>
   <p>参与校对需要站长发的密钥。输入一次，这个浏览器就会记住；一个密钥最多用在 3 个浏览器上，无痕窗口每次都算新的浏览器。</p>
-  <form class="mine-id" id="keyForm"><input id="keyIn" autocomplete="off" spellcheck="false" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX" aria-label="校对密钥">
-    <button class="btn main" id="keyGo">确定</button></form>
-  <p class="mr-err" id="keyErr"></p>
-  <form method="dialog"><button class="btn ghost">取消</button></form>
+  <form class="key-form" id="keyForm"><input id="keyIn" autocomplete="off" spellcheck="false" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX" aria-label="校对密钥">
+    <p class="mr-err" id="keyErr"></p>
+    <div class="key-btns"><button type="button" class="btn ghost" id="keyCancel">取消</button><button class="btn main" id="keyGo">确定</button></div></form>
 </dialog>
 
 <dialog class="about frame" id="about" tabindex="-1">
