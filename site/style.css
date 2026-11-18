@@ -443,7 +443,8 @@ mark.w { background: rgba(200, 70, 55, .42); }
 /* the pane tabs: only on small screens, where one pane shows at a time */
 .ptabs { display: none; }
 
-.toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); padding: 9px 18px; border: 1px solid var(--line); border-radius: 5px;
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); width: max-content; max-width: calc(100vw - 32px); box-sizing: border-box;   /* one line when it fits */
+  padding: 9px 18px; border: 1px solid var(--line); border-radius: 5px;
   background: var(--glass); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); color: var(--cream); font-size: 13.5px; box-shadow: 0 8px 26px rgba(0, 0, 0, .5); opacity: 0; pointer-events: none; transition: all .25s; z-index: 60; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
@@ -459,6 +460,89 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .about b { color: #f4eadf; font-weight: 600; }
 .about form { margin-top: 14px; text-align: right; }
 .about .ico { width: 14px; height: 14px; vertical-align: -2px; }
+.about .mine-open { margin-left: 6px; padding: 3px 10px; vertical-align: 1px; }
+
+/* ---------- proofreading: a line edited in its row, the reader's edits waiting (待提交) or under review (审核中), 我的校对 ---------- */
+.row .t .fixed { position: relative; display: block; width: 5px; height: 5px; margin: 5px 0 0 1px; border-radius: 50%; background: var(--gold); opacity: .85; cursor: help; }
+.row .t .fixed::before { content: ""; position: absolute; inset: -8px -16px -10px -8px; }   /* a target a finger can hit */
+.row .t .dtag { display: block; width: max-content; margin-top: 5px; padding: 0 5px; border: 1px solid rgba(213, 174, 97, .6); border-radius: 3px;
+  font-size: 11px; line-height: 17px; letter-spacing: 0; color: var(--gold2); }
+.row .t .dtag.sent { border-color: rgba(143, 196, 154, .5); color: #8fc49a; }
+.row.sub.draft { background: rgba(213, 174, 97, .06); }
+.sub .fld { display: grid; gap: 1px; }
+.sub .was, .mbody .was { opacity: .7; }
+.sub .zh.was, .mbody .zh.was { font-weight: 400; font-size: .94em; }
+.sub del, .mbody del { color: #f0a090; background: rgba(224, 82, 70, .2); text-decoration: line-through; }
+.sub ins, .mbody ins { color: #b9e4c2; background: rgba(110, 190, 120, .22); text-decoration: none; border-radius: 2px; }
+.row.sub.editing { cursor: default; background: rgba(213, 174, 97, .09); box-shadow: inset 2px 0 0 var(--gold); }
+.ed { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.ed-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+@container subs (min-width: 560px) { .ed-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); } }
+.ed-t, .ed-note, .mine-id input { width: 100%; box-sizing: border-box; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px;
+  background: rgba(0, 0, 0, .3); color: var(--cream); font: inherit; outline: none; }
+.ed-t { display: block; resize: none; overflow: hidden; line-height: 1.55; }
+.ed-t[data-f="ja"] { font: 400 13.5px/1.55 var(--jp); }
+.ed-t[data-f="zh"] { font: 500 15px/1.55 var(--sans); }
+.ed-note { font-size: 12.5px; }
+.ed-t:focus, .ed-note:focus, .mine-id input:focus { border-color: var(--gold); }
+.ed-btns { display: flex; align-items: center; gap: 8px; }
+.ed-btns .btn { padding: 3px 10px; }
+.ed-hint { margin-left: auto; font-size: 11.5px; color: var(--mute2); }
+.btn.main { border-color: rgba(196, 164, 106, .55); background: rgba(196, 164, 106, .2); color: #f4eadf; }
+.btn:disabled { opacity: .5; cursor: default; }
+.dbar { flex: none; display: flex; align-items: center; gap: 10px; padding: 7px 10px 7px 14px; border-top: 1px solid rgba(213, 174, 97, .35);
+  background: rgba(213, 174, 97, .1); font-size: 13px; color: var(--gold2); }
+.dbar .btn { margin-left: auto; padding: 4px 12px; }
+.pane.has-drafts .back, .pane.has-review .back { bottom: 56px; }
+.pane.has-drafts.has-review .back { bottom: 100px; }
+/* reviewing on the page (the owner): the waiting suggestions under their lines, and the bar to go through them */
+.rbar { flex-wrap: wrap; border-top-color: rgba(120, 160, 200, .4); background: rgba(120, 160, 200, .12); color: #b9cfe4; }
+.rbar .btn { margin-left: 0; text-decoration: none; }
+.rbar #rvPrev { margin-left: auto; }
+.row .t .dtag.rv { border-color: rgba(120, 160, 200, .7); color: #a9c4dd; }
+.rvs { grid-column: 1 / -1; margin-top: 6px; padding: 6px 10px 8px; border-left: 2px solid rgba(120, 160, 200, .7); border-radius: 0 4px 4px 0;
+  background: rgba(120, 160, 200, .08); }
+.rvs-hd { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 12px; color: var(--mute); }
+.rvs-hd b { font-weight: 600; color: #d3e2f0; }
+.rvs-f { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 6px; margin-top: 3px; }
+.rvs-f .k { padding-top: 3px; font-size: 11.5px; color: var(--mute2); }
+.rvs-same, .rvs-note { font-size: 12px; color: var(--mute); }
+.rvs-note { margin-top: 3px; }
+.rvs-warn { margin-top: 3px; font-size: 12px; color: #e8b46a; }
+.rvs-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.rvs-btns .btn { padding: 2px 10px; }
+.rvs-btns .rvs-no { color: #f0b0a2; }
+.mine-id { display: flex; align-items: center; gap: 10px; margin: 4px 0 8px; }
+.mine-id label { display: flex; flex: 1; align-items: center; gap: 10px; white-space: nowrap; }
+.mine-tag { color: var(--gold2); font-variant-numeric: tabular-nums; }
+.mine-help { margin: 0 0 8px; font-size: 12.5px; color: var(--mute); }
+.mine-btns, .mine-send { display: flex; flex-wrap: wrap; gap: 8px; }
+.mine-btns { margin: 2px 0 6px; }
+.mine-foot { margin-top: 14px; }
+.keybox { max-width: 440px; }
+.keybox p { margin: 0 0 10px; }
+#keyIn { flex: 1; letter-spacing: 2px; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+#keyIn::placeholder { letter-spacing: 1px; }
+.mine-send { justify-content: flex-end; margin-top: 8px; }
+.mine-list { display: flex; flex-direction: column; gap: 6px; }
+.mitem { padding: 7px 10px 8px; border: 1px solid var(--line2); border-radius: 4px; background: rgba(0, 0, 0, .2); }
+.mr-hd { display: flex; align-items: baseline; gap: 10px; margin-bottom: 2px; }
+.mr-hd b { font-weight: 600; color: #f4eadf; font-variant-numeric: tabular-nums; }
+.mr-hd .when { margin-left: auto; font-size: 12px; color: var(--mute2); }
+.mr-hd b + .mr-b { margin-left: auto; }   /* a draft's buttons to the right (a sent one's go there after its time) */
+.mr-b { padding: 1px 8px; border: 1px solid var(--line); border-radius: 3px; background: transparent; color: var(--cream2); font-size: 12px; cursor: pointer; }
+.mr-b:hover { border-color: var(--gold); color: #fff; }
+.mitem .st { font-size: 12px; color: var(--mute); }
+.mitem .st.pending { color: var(--gold2); }
+.mitem .st.approved { color: #8fc49a; }
+.mitem .st.rejected, .mitem .st.reverted { color: #e08a7a; }
+.mbody { display: grid; gap: 2px; }
+.mbody .fld { display: grid; gap: 1px; }
+.mbody .ja { font: 400 13px/1.55 var(--jp); color: #b9b0a3; overflow-wrap: anywhere; }
+.mbody .zh { font: 500 14px/1.55 var(--sans); color: var(--cream); overflow-wrap: anywhere; }
+.mr-why { margin-top: 2px; font-size: 12px; color: var(--mute); }
+.mr-err { margin-top: 2px; font-size: 12px; color: #e08a7a; }
+.mine-none { margin: 4px 0; color: var(--mute); }
 kbd { padding: 0 5px; border: 1px solid var(--line); border-radius: 3px; font-size: 12px; font-family: inherit; }
 
 /* ---------- medium screens: the subtitles over the chat ---------- */
@@ -529,6 +613,7 @@ kbd { padding: 0 5px; border: 1px solid var(--line); border-radius: 3px; font-si
   .cols:not(.has-mention) { display: none; }
   .chips { height: 36px; padding: 0 8px; overflow-x: auto; scrollbar-width: none; }
   .row { grid-template-columns: 54px minmax(0, 1fr) auto; padding-left: 8px; padding-right: 4px; }
+  .row.sub { padding-right: 22px; }   /* its 校对 button clear of the scroll bar, 18 px wide on a touch screen */
   .pane.chat .row { grid-template-columns: 50px minmax(0, 1fr) auto; }
   .acts { opacity: 1; }
   .row .acts { opacity: .55; }
@@ -536,6 +621,8 @@ kbd { padding: 0 5px; border: 1px solid var(--line); border-radius: 3px; font-si
   /* the viewer list opens upward over the player, as wide as both boxes (app.js sets its left and height), so the
      box typed into and the keyboard stay clear; its 收起 row comes last, kept right above the box */
   .suggest { top: auto; bottom: calc(100% + 6px); }
+  .ed-hint { display: none; }
+  .ed-btns [data-ed="cancel"] { margin-left: auto; }
   .suggest .sh { position: sticky; bottom: -4px; margin: 2px -4px -4px; padding: 8px 8px 8px 12px; border-top: 1px solid var(--line2);
     background: rgba(27, 25, 29, .96); }
 }

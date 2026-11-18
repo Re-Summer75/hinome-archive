@@ -17,6 +17,7 @@
   <symbol id="i-search" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.8"/><path d="M13 13l4.5 4.5"/></g></symbol>
   <symbol id="i-user" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="7" r="3.4"/><path d="M3.8 17c.9-3.3 3.3-5 6.2-5s5.3 1.7 6.2 5"/></g></symbol>
   <symbol id="i-link" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 5.6l1.3-1.3a3.3 3.3 0 0 1 4.7 4.7l-1.3 1.3"/><path d="M10.8 14.4l-1.3 1.3a3.3 3.3 0 0 1-4.7-4.7l1.3-1.3"/></g></symbol>
+  <symbol id="i-pen" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.7 4.3l3 3-8.2 8.2-3.7.7.7-3.7z"/><path d="M11.1 5.9l3 3"/></g></symbol>
   <symbol id="i-out" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4h5v5"/><path d="M16 4l-7 7"/><path d="M14 11.5V15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3.5"/></g></symbol>
   <symbol id="i-x" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-ctx" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 5h12M4 10h12M4 15h12"/><path d="M1.5 10h1" stroke-width="2.4"/></g></symbol>
@@ -129,6 +130,10 @@
         <div class="cols"><span class="ja">日文原文</span><span class="zh">中文翻译</span>
           <button class="chip mention" id="mention" type="button" hidden title="只看她念到或提到这位观众的字幕">提到 TA<i></i></button></div>
         <div class="list" tabindex="-1"><div class="spacer"></div></div>
+        <div class="dbar" id="draftBar" hidden><span id="draftN"></span><button type="button" class="btn main" id="draftGo">查看并提交</button></div>
+        <div class="dbar rbar" id="reviewBar" hidden><span id="rvN"></span><button type="button" class="btn ghost" id="rvPrev">上一处</button>
+          <button type="button" class="btn main" id="rvNext">下一处</button><a class="btn ghost" href="review.html" target="_blank" rel="noopener">列表</a>
+          <button type="button" class="btn ghost" id="rvExit">退出审核</button></div>
         <button class="back" type="button" hidden></button>
       </section>
 
@@ -152,6 +157,33 @@
 
 <div class="toast" id="toast" role="status"></div>
 
+<dialog class="about mine frame" id="mineBox" tabindex="-1">
+  <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
+  <h2>我的校对</h2>
+  <p class="mine-help" id="mineState"></p>
+  <div class="mine-id" id="mineNickRow"><label>署名<input id="mineNick" maxlength="20" placeholder="匿名" autocomplete="off"></label>
+    <span class="mine-tag" id="mineTag"></span><button type="button" class="btn" id="mineSave">保存</button></div>
+  <div class="mine-btns"><button type="button" class="btn main" id="mineKeyBtn">输入校对密钥</button>
+    <button type="button" class="btn ghost" id="mineUnbind">解除这个浏览器的绑定</button></div>
+  <h3>待提交<span id="draftCount"></span></h3>
+  <div class="mine-list" id="draftList"></div>
+  <div class="mine-send"><button type="button" class="btn ghost" id="draftDrop">全部撤销</button><button type="button" class="btn main" id="draftSend">全部提交</button></div>
+  <h3>已提交</h3>
+  <div class="mine-list" id="mineList"></div>
+  <p class="mine-help mine-foot">名字后面的 # 和四个字符用来区分同名的人。还没提交的修改只存在这个浏览器里，清除浏览器数据会一起丢失。</p>
+  <form method="dialog"><button class="btn">关闭</button></form>
+</dialog>
+
+<dialog class="about keybox frame" id="keyBox" tabindex="-1">
+  <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
+  <h2>校对密钥</h2>
+  <p>参与校对需要站长发的密钥。输入一次，这个浏览器就会记住；一个密钥最多用在 3 个浏览器上，无痕窗口每次都算新的浏览器。</p>
+  <form class="mine-id" id="keyForm"><input id="keyIn" autocomplete="off" spellcheck="false" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX" aria-label="校对密钥">
+    <button class="btn main" id="keyGo">确定</button></form>
+  <p class="mr-err" id="keyErr"></p>
+  <form method="dialog"><button class="btn ghost">取消</button></form>
+</dialog>
+
 <dialog class="about frame" id="about" tabindex="-1">
   <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
   <h2>说明</h2>
@@ -170,9 +202,12 @@
     <li><b>SC 栏</b>和直播间一样新的在上：跟随播放时当前这条停在最上面，左侧朱红竖线标出；新的 SC 从上方推进来。</li>
     <li>本页播放为 360P（省流量、加载快）；想看高清请点「在B站打开当前位置」。</li>
   </ul>
+  <h3>参与校对</h3>
+  <p>校对需要站长发的<b>校对密钥</b>：第一次点某一句右边的 <svg class="ico"><use href="#i-pen"/></svg> 时输入，一个密钥最多用在 3 个浏览器上。之后直接在那一行里改日文或中文（可以先试听），按 Enter 或「完成」。改过的句子会同时显示原来的和改后的，标着「待提交」，可以接着改别的句子；都满意了，点字幕栏下方的「查看并提交」一起提交。站长审核通过后，网站上的这一句就会换成新的，时间下面多一个小金点，点一下（电脑上鼠标停在上面）能看到是谁校对的。
+    <button type="button" class="btn ghost mine-open" id="mineBtn">我的校对</button></p>
   <h3>数据</h3>
   <ul>
-    <li><b>字幕</b>：三个语音识别模型听写，Gemini 整理翻译，再经二审、三审，与视频里的字幕一致。难免有误，请保持怀疑。</li>
+    <li><b>字幕</b>：三个语音识别模型听写，Gemini 整理翻译，再经二审、三审。难免有误，请保持怀疑。观众校对并审核通过的句子会直接换上，所以个别句子可能和视频里烧录的字幕不同。</li>
     <li><b>弹幕、SC、上舰、礼物</b>：录播时同步保存的原始记录，弹幕原样收录。SC 的中文译文与视频里一致。礼物只列付费礼物。</li>
     <li>弹幕里观众替主播翻译的同传真假参半，字幕翻译没有参考它们。</li>
     <li><b>头像</b>：取自录播里 SC 和礼物记录附带的头像（当时的头像）；弹幕记录本身不带头像，只发过弹幕的观众显示名字的首字。</li>

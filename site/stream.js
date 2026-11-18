@@ -127,5 +127,5 @@ window.BiliStream = (() => {
     if (!r.ok) throw new Error("manifest " + r.status);
     return r.json();
   }
-  return { Player, fetchManifest, parseSidx, supported: !!MS };
+  return { Player, fetchManifest, parseSidx, supported: !!MS, API: STREAM_API };   // API: the proofreading uses the same Worker
 })();

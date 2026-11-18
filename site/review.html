@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>字幕校对审核 · 千舰史料</title>
+<link rel="icon" href="assets/cut_hdr_flower.webp">
+<style>
+/* The owner's page for readers' subtitle fixes (review.js). In the site's colours, but a plain scrolling page. */
+@font-face { font-family: "Hinome Serif"; font-weight: 700; font-display: swap; src: url("assets/serif-700.woff2") format("woff2"); }
+:root {
+  --ink: #141316; --cream: #ede5d8; --cream2: #d8cfc1; --mute: #a69c8e; --mute2: #6f675e; --gold: #c4a46a; --gold2: #d5ae61; --shu: #b8302a;
+  --line: rgba(200, 182, 150, .26); --line2: rgba(200, 182, 150, .12); --card: rgba(255, 255, 255, .03);
+  --serif: "Hinome Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --jp: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Meiryo", "Noto Sans JP", var(--sans);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ink); color: var(--cream); font: 14px/1.6 var(--sans); }
+button, input, select, textarea { font: inherit; color: inherit; }
+.hd { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 12px 20px;
+  border-bottom: 1px solid var(--line); background: rgba(20, 19, 22, .94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.hd h1 { margin: 0; font: 700 18px/1.3 var(--serif); letter-spacing: 4px; color: #f4eadf; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+.tabs button, .tools button, .tools select, .act button { padding: 4px 11px; border: 1px solid var(--line); border-radius: 4px; background: transparent; cursor: pointer; }
+.tabs button:hover, .tools button:hover, .act button:hover { border-color: var(--gold); color: #fff; }
+.tabs button.on { border-color: var(--gold); background: rgba(196, 164, 106, .18); color: #fff; }
+.tabs i { margin-left: 5px; font-style: normal; font-size: 12px; color: var(--gold2); }
+.tabs i:empty { display: none; }
+.tools { display: flex; gap: 6px; margin-left: auto; }
+.tools select { background: var(--ink); }
+.golive { padding: 4px 11px; border: 1px solid var(--gold); border-radius: 4px; background: rgba(196, 164, 106, .18); color: #fff; text-decoration: none; white-space: nowrap; }
+main { max-width: 920px; margin: 0 auto; padding: 16px 20px 60px; }
+.empty, .note { padding: 30px 0; text-align: center; color: var(--mute); }
+.filter { margin-bottom: 12px; color: var(--gold2); }
+.filter button { margin-left: 8px; padding: 1px 8px; border: 1px solid var(--line); border-radius: 3px; background: transparent; cursor: pointer; }
+.card { margin-bottom: 12px; padding: 12px 14px; border: 1px solid var(--line2); border-radius: 6px; background: var(--card); }
+.card.done { opacity: .55; }
+.c-hd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 6px; font-size: 13px; color: var(--mute); }
+.c-hd .at { font-weight: 600; color: #f4eadf; font-variant-numeric: tabular-nums; }
+.c-hd a { color: var(--gold2); text-decoration: none; }
+.c-hd a:hover { text-decoration: underline; }
+.c-hd .who { color: var(--cream2); }
+.c-hd .who.blocked { color: #e08a7a; text-decoration: line-through; }
+.c-hd .st { margin-left: auto; }
+.st.pending { color: var(--gold2); } .st.approved { color: #8fc49a; } .st.rejected, .st.reverted { color: #e08a7a; }
+.f { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 8px; margin: 3px 0; }
+.f .k { padding-top: 1px; font-size: 12px; color: var(--mute2); }
+.f .v { overflow-wrap: anywhere; }
+.f .v.ja { font-family: var(--jp); }
+.f .v.same { color: var(--mute2); }
+del { color: #f0a090; background: rgba(224, 82, 70, .18); text-decoration: line-through; }
+ins { color: #a8e0b0; background: rgba(110, 190, 120, .2); text-decoration: none; }
+.sub { margin-top: 4px; font-size: 12.5px; color: var(--mute); }
+.sub b { font-weight: 400; color: var(--cream2); }
+.warn { margin-top: 4px; font-size: 12.5px; color: #e8b46a; }
+.ctx { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line2); font-size: 12px; color: var(--mute2); }
+.ctx div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.act .ok { border-color: rgba(143, 196, 154, .6); color: #b9e4c2; }
+.act .no { border-color: rgba(224, 138, 122, .5); color: #f0b0a2; }
+.act input { flex: 1; min-width: 160px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: rgba(0, 0, 0, .3); outline: none; }
+.edit textarea { width: 100%; margin: 2px 0 4px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; background: rgba(0, 0, 0, .3); resize: vertical; outline: none; }
+.edit textarea:focus, .act input:focus, .login input:focus { border-color: var(--gold); }
+.live { font-size: 12px; color: #8fc49a; }
+.live.off { color: var(--mute2); }
+.more { display: block; margin: 0 auto; padding: 6px 16px; border: 1px solid var(--line); border-radius: 4px; background: transparent; cursor: pointer; }
+.c-hd .label { color: var(--mute2); }
+.newkey { display: flex; gap: 8px; margin-bottom: 12px; }
+.newkey input { flex: 1; padding: 6px 9px; border: 1px solid var(--line); border-radius: 4px; background: rgba(0, 0, 0, .3); outline: none; }
+.newkey input:focus { border-color: var(--gold); }
+.newkey button { padding: 6px 14px; border: 1px solid var(--gold); border-radius: 4px; background: rgba(196, 164, 106, .18); cursor: pointer; }
+.codebox { margin-bottom: 14px; padding: 12px 14px; border: 1px solid var(--gold); border-radius: 6px; background: rgba(196, 164, 106, .1); }
+.codebox .code { margin: 0 10px 0 4px; font: 700 20px/1.4 Consolas, "SFMono-Regular", monospace; letter-spacing: 2px; color: #fff3e2; user-select: all; }
+.codebox button { padding: 2px 10px; border: 1px solid var(--line); border-radius: 3px; background: transparent; cursor: pointer; }
+.codebox p { margin: 6px 0 0; font-size: 12.5px; color: var(--mute); }
+.devs { margin-top: 6px; font-size: 12.5px; color: var(--mute); }
+.dev { display: inline-flex; align-items: center; gap: 6px; margin: 2px 12px 2px 0; color: var(--cream2); }
+.dev button { padding: 0 7px; border: 1px solid var(--line); border-radius: 3px; background: transparent; font-size: 12px; cursor: pointer; }
+.dev button:hover { border-color: var(--gold); }
+.login { max-width: 420px; margin: 60px auto; padding: 22px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); }
+.login h2 { margin: 0 0 8px; font: 700 17px/1.3 var(--serif); letter-spacing: 3px; color: #f4eadf; }
+.login p { margin: 0 0 12px; color: var(--mute); font-size: 13px; }
+.login form { display: flex; gap: 8px; }
+.login input { flex: 1; padding: 6px 9px; border: 1px solid var(--line); border-radius: 4px; background: rgba(0, 0, 0, .3); outline: none; }
+.login button { padding: 6px 14px; border: 1px solid var(--gold); border-radius: 4px; background: rgba(196, 164, 106, .18); cursor: pointer; }
+.login .err { margin-top: 10px; color: #e08a7a; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 16px); padding: 8px 16px; border: 1px solid var(--line); border-radius: 5px;
+  background: rgba(27, 25, 29, .95); opacity: 0; pointer-events: none; transition: all .2s; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 640px) {
+  .hd { padding: 10px 12px; }
+  .tools { margin-left: 0; }
+  main { padding: 12px 12px 60px; }
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <h1>字幕校对审核</h1>
+  <nav class="tabs" id="tabs">
+    <button type="button" data-st="pending" class="on">待审核<i></i></button>
+    <button type="button" data-st="approved">已上线<i></i></button>
+    <button type="button" data-st="rejected">未采纳<i></i></button>
+    <button type="button" data-st="reverted">已撤下<i></i></button>
+    <button type="button" data-st="all">全部</button>
+    <button type="button" data-st="keys">密钥</button>
+  </nav>
+  <div class="tools">
+    <select id="part" aria-label="分P"><option value="">全部分P</option><option value="1">P1</option><option value="2">P2</option><option value="3">P3</option><option value="4">P4</option></select>
+    <a class="golive" href="index.html?review=1" target="_blank" rel="noopener">在原页面里审核 ↗</a>
+    <button type="button" id="reload">刷新</button>
+    <button type="button" id="logout">退出</button>
+  </div>
+</header>
+<main id="main"></main>
+<div class="toast" id="toast" role="status"></div>
+<script src="stream.js"></script>
+<script src="review.js"></script>
+</body>
+</html>
