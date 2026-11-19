@@ -130,10 +130,17 @@
         <div class="cols"><span class="ja">日文原文</span><span class="zh">中文翻译</span>
           <button class="chip mention" id="mention" type="button" hidden title="只看她念到或提到这位观众的字幕">提到 TA<i></i></button></div>
         <div class="list" tabindex="-1"><div class="spacer"></div></div>
-        <div class="dbar" id="draftBar" hidden><span id="draftN"></span><button type="button" class="btn main" id="draftGo">查看并提交</button></div>
-        <div class="dbar rbar" id="reviewBar" hidden><span id="rvN"></span><button type="button" class="btn ghost" id="rvPrev">上一处</button>
-          <button type="button" class="btn main" id="rvNext">下一处</button><a class="btn ghost" href="review.html" target="_blank" rel="noopener">列表</a>
-          <button type="button" class="btn ghost" id="rvExit">退出审核</button></div>
+        <div class="dbar wbar" id="draftBar" hidden>
+          <div class="wseg" id="mineSeg"><span class="wtxt" id="draftN"></span><button type="button" class="btn main" id="draftGo">查看并提交</button></div>
+          <div class="wseg own" id="ownSeg" hidden><span class="wtxt" id="ownN"></span><button type="button" class="btn" id="ownGo">开始审核</button></div>
+        </div>
+        <div class="dbar rbar" id="reviewBar" hidden>
+          <div class="rvrow"><span id="rvN"></span><span class="rvpos" id="rvPos" hidden></span>
+            <span class="rvundo" id="rvUndo" hidden><span id="rvUndoT"></span><button type="button" id="rvUndoGo">撤销</button></span></div>
+          <div class="rvrow rvbtns"><button type="button" class="btn ghost" id="rvPrev">上一处</button><button type="button" class="btn main" id="rvNext">下一处</button>
+            <a class="btn ghost" href="review.html" target="_blank" rel="noopener">列表</a><button type="button" class="btn ghost" id="rvExit">退出审核</button>
+            <span class="rvkeys">快捷键 N 下一处 · P 上一处 · A 通过 · E 改 · R 不采纳</span></div>
+        </div>
         <button class="back" type="button" hidden></button>
       </section>
 
@@ -156,6 +163,7 @@
 </main>
 
 <div class="toast" id="toast" role="status"></div>
+<div class="pop" id="linePop" role="dialog" hidden></div>
 
 <dialog class="about mine frame" id="mineBox" tabindex="-1">
   <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
@@ -163,15 +171,15 @@
   <p class="mine-help" id="mineState"></p>
   <div class="mine-id" id="mineNickRow"><label>署名<input id="mineNick" maxlength="20" placeholder="匿名" autocomplete="off"></label>
     <span class="mine-tag" id="mineTag"></span><button type="button" class="btn" id="mineSave">保存</button></div>
-  <div class="mine-btns"><button type="button" class="btn main" id="mineKeyBtn">输入校对密钥</button>
-    <button type="button" class="btn ghost" id="mineUnbind">解除这个浏览器的绑定</button></div>
-  <h3>待提交<span id="draftCount"></span></h3>
-  <div class="mine-list" id="draftList"></div>
-  <div class="mine-send"><button type="button" class="btn ghost" id="draftDrop">全部撤销</button><button type="button" class="btn main" id="draftSend">全部提交</button></div>
-  <h3>已提交</h3>
-  <div class="mine-list" id="mineList"></div>
-  <p class="mine-help mine-foot">名字后面的 # 和四个字符用来区分同名的人。还没提交的修改只存在这个浏览器里，清除浏览器数据会一起丢失。</p>
-  <form method="dialog"><button class="btn">关闭</button></form>
+  <div class="mine-btns"><button type="button" class="btn main" id="mineKeyBtn">输入校对密钥</button></div>
+  <nav class="mine-tabs" id="mineTabs" aria-label="按状态看"></nav>
+  <div id="draftPane">
+    <div class="mine-list" id="draftList"></div>
+    <div class="mine-send"><button type="button" class="btn ghost" id="draftDrop">全部撤销</button><button type="button" class="btn main" id="draftSend">全部提交</button></div>
+  </div>
+  <div id="sentPane" hidden><div class="mine-list" id="mineList"></div></div>
+  <p class="mine-help mine-foot">名字后面的 # 和四个字符用来区分同名的人。还没提交的修改只存在这个浏览器里；清除浏览器数据或用无痕窗口，会被当成新的浏览器。</p>
+  <div class="mine-end"><button type="button" class="btn ghost" id="mineUnbind">解除这个浏览器的绑定</button><form method="dialog"><button class="btn">关闭</button></form></div>
 </dialog>
 
 <dialog class="about keybox frame" id="keyBox" tabindex="-1">
@@ -202,7 +210,7 @@
     <li>本页播放为 360P（省流量、加载快）；想看高清请点「在B站打开当前位置」。</li>
   </ul>
   <h3>参与校对</h3>
-  <p>校对需要站长发的<b>校对密钥</b>：第一次点某一句右边的 <svg class="ico"><use href="#i-pen"/></svg> 时输入，一个密钥最多用在 3 个浏览器上。之后直接在那一行里改日文或中文（可以先试听），按 Enter 或「完成」。改过的句子会同时显示原来的和改后的，标着「待提交」，可以接着改别的句子；都满意了，点字幕栏下方的「查看并提交」一起提交。站长审核通过后，网站上的这一句就会换成新的，时间下面多一个小金点，点一下（电脑上鼠标停在上面）能看到是谁校对的。
+  <p>校对需要站长发的<b>校对密钥</b>：第一次点某一句右边的 <svg class="ico"><use href="#i-pen"/></svg> 时输入，一个密钥最多用在 3 个浏览器上。之后直接在那一行里改日文或中文（可以先试听），按 Enter 或「完成」，这一句就标上「待提交」，可以接着改别的；都改好了，点字幕栏下方的「查看并提交」一起交。交了以后，字幕栏下方一直有「我的校对」，看得到每一处是审核中、已通过还是未采纳；字幕行里也标着结果，点一下标记能看详情，比如未采纳的理由。审核通过的句子会直接换成新的，时间下面多一个小金点，点一下能看到是谁校对的、原来是什么。
     <button type="button" class="btn ghost mine-open" id="mineBtn">我的校对</button></p>
   <h3>数据</h3>
   <ul>

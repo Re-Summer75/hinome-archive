@@ -76,6 +76,21 @@ ins { color: #a8e0b0; background: rgba(110, 190, 120, .2); text-decoration: none
 .codebox .code { margin: 0 10px 0 4px; font: 700 20px/1.4 Consolas, "SFMono-Regular", monospace; letter-spacing: 2px; color: #fff3e2; user-select: all; }
 .codebox button { padding: 2px 10px; border: 1px solid var(--line); border-radius: 3px; background: transparent; cursor: pointer; }
 .codebox p { margin: 6px 0 0; font-size: 12.5px; color: var(--mute); }
+.bulk { position: sticky; top: 58px; z-index: 4; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 12px; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 6px; background: rgba(27, 25, 29, .96); font-size: 13px; }
+.bulk label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.bulk .bulk-n { color: var(--mute); }
+.bulk button { padding: 3px 12px; border: 1px solid var(--line); border-radius: 4px; background: transparent; cursor: pointer; }
+.bulk button:first-of-type { margin-left: auto; }
+.bulk .ok { border-color: rgba(143, 196, 154, .6); color: #b9e4c2; }
+.bulk .no { border-color: rgba(224, 138, 122, .5); color: #f0b0a2; }
+.bulk button:disabled { opacity: .45; cursor: default; }
+.pick, .bulk input { width: 16px; height: 16px; margin: 0; accent-color: #c4a46a; cursor: pointer; vertical-align: -3px; }
+.card.picked { border-color: rgba(196, 164, 106, .55); background: rgba(196, 164, 106, .06); }
+.kcode { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 6px; font-size: 12.5px; color: var(--mute); }
+.kcode .code { font: 700 15px/1.4 Consolas, "SFMono-Regular", monospace; letter-spacing: 1.5px; color: #fff3e2; user-select: all; }
+.kcode button { padding: 0 8px; border: 1px solid var(--line); border-radius: 3px; background: transparent; font-size: 12px; cursor: pointer; }
+.kcode button:hover { border-color: var(--gold); }
 .devs { margin-top: 6px; font-size: 12.5px; color: var(--mute); }
 .dev { display: inline-flex; align-items: center; gap: 6px; margin: 2px 12px 2px 0; color: var(--cream2); }
 .dev button { padding: 0 7px; border: 1px solid var(--line); border-radius: 3px; background: transparent; font-size: 12px; cursor: pointer; }
@@ -91,6 +106,7 @@ ins { color: #a8e0b0; background: rgba(110, 190, 120, .2); text-decoration: none
   background: rgba(27, 25, 29, .95); opacity: 0; pointer-events: none; transition: all .2s; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 640px) {
+  .bulk { position: static; }
   .hd { padding: 10px 12px; }
   .tools { margin-left: 0; }
   main { padding: 12px 12px 60px; }
