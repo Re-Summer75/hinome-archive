@@ -316,7 +316,8 @@ svg { flex: none; }
 .chip:hover { border-color: var(--line); color: var(--cream2); }
 .chip.on { border-color: var(--gold); color: #f4eadf; background: rgba(196, 164, 106, .14); }
 .chip.on i { color: var(--gold2); }
-.cols .mention { grid-column: -2; justify-self: end; font-family: var(--sans); letter-spacing: 0; }
+.colbtns { grid-column: -2; justify-self: end; display: flex; gap: 6px; }   /* 校对记录, and 提到 TA when a viewer is picked */
+.cols .chip { font-family: var(--sans); letter-spacing: 0; }
 .chip.mention.on { border-color: rgba(220, 90, 70, .7); background: rgba(184, 48, 42, .25); }
 
 .list { position: relative; flex: 1; min-height: 0; overflow-y: auto; outline: none; overscroll-behavior: contain; }
@@ -476,8 +477,11 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .about .mine-open { margin-left: 6px; padding: 3px 10px; vertical-align: 1px; }
 
 /* ---------- proofreading: a line edited in its row, the reader's edits waiting (待提交) or under review (审核中), 我的校对 ---------- */
-.row .t .fixed { position: relative; display: block; width: 5px; height: 5px; margin: 5px 0 0 1px; border-radius: 50%; background: var(--gold); opacity: .85; cursor: help; }
-.row .t .fixed::before { content: ""; position: absolute; inset: -8px -16px -10px -8px; }   /* a target a finger can hit */
+/* a line readers fixed: a quiet gold mark under its time with the day it last changed (a click: its history) */
+.row .t .fixed { display: flex; align-items: center; gap: 4px; width: max-content; margin-top: 3px; padding: 3px 8px 3px 0;
+  font-size: 11px; line-height: 14px; letter-spacing: 0; color: rgba(213, 174, 97, .8); font-variant-numeric: tabular-nums; cursor: pointer; }
+.row .t .fixed::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.row .t .fixed:hover { color: var(--gold2); }
 .row .t .dtag { display: block; width: max-content; margin-top: 5px; padding: 0 5px; border: 1px solid rgba(213, 174, 97, .6); border-radius: 3px;
   font-size: 11px; line-height: 17px; letter-spacing: 0; color: var(--gold2); }
 .row .t .dtag.sent { border-color: rgba(120, 160, 200, .6); color: #a9c4dd; }   /* waiting for review */
@@ -496,8 +500,33 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .sub del, .mbody del, .pp-bd del { color: #f0a090; background: rgba(224, 82, 70, .2); text-decoration: line-through; }
 .sub ins, .mbody ins, .pp-bd ins { color: #b9e4c2; background: rgba(110, 190, 120, .22); text-decoration: none; border-radius: 2px; }
 /* a line's card (its tag or dot clicked): how the reader's suggestion went, or who fixed it and what it said before */
-.pop { position: fixed; z-index: 58; box-sizing: border-box; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: 6px;
-  background: rgba(28, 26, 30, .97); box-shadow: 0 12px 32px rgba(0, 0, 0, .55); color: var(--cream2); font-size: 13px; line-height: 1.6; }
+.pop { position: fixed; z-index: 58; box-sizing: border-box; display: flex; flex-direction: column; max-height: min(72vh, 600px); padding: 10px 12px 12px;
+  border: 1px solid var(--line); border-radius: 6px; background: rgba(28, 26, 30, .97); box-shadow: 0 12px 32px rgba(0, 0, 0, .55);
+  color: var(--cream2); font-size: 13px; line-height: 1.6; }
+.pp-hd, .pp-btns { flex: none; }
+.pp-bd { min-height: 0; overflow-y: auto; overscroll-behavior: contain; margin-right: -6px; padding-right: 6px; }   /* a long history scrolls; × stays */
+/* a fixed line's history: its versions newest first, down to what the data said */
+.hist { display: grid; gap: 6px; margin-top: 4px; }
+.hi { padding: 5px 8px 6px; border: 1px solid var(--line2); border-radius: 4px; background: rgba(0, 0, 0, .2); }
+.hi.live { border-color: rgba(143, 196, 154, .45); }
+.hi.off { opacity: .75; }
+.hi.orig { background: transparent; border-style: dashed; }
+.hi-hd { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 12px; color: var(--mute); }
+.hi-hd b { font-weight: 600; color: var(--gold2); }
+.hi-tag { padding: 0 5px; border: 1px solid; border-radius: 3px; font-size: 11px; line-height: 16px; }
+.hi-tag.now { border-color: rgba(143, 196, 154, .55); color: #8fc49a; }
+.hi-tag.old { border-color: rgba(200, 182, 150, .3); color: var(--mute); }
+.hi-tag.off { border-color: rgba(224, 138, 122, .5); color: #e8a090; }
+.hi-f { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 4px; margin-top: 2px; }
+.hi-f .k { padding-top: 2px; font-size: 11px; color: var(--mute2); }
+.hi-f .ja { font: 400 12.5px/1.5 var(--jp); color: #b9b0a3; overflow-wrap: anywhere; }
+.hi-f .zh { font: 500 13.5px/1.5 var(--sans); color: var(--cream); overflow-wrap: anywhere; }
+.pp-wait { margin: 8px 0 0; font-size: 12px; color: #a9c4dd; }
+.hi-note { margin-top: 3px; font-size: 12px; line-height: 1.5; color: #c9bfae; }
+.pp-day { margin-left: 2px; font-size: 12px; color: var(--mute); }
+.pp-more { margin: 8px 0 0; text-align: right; }
+.ed-busy { font-size: 12px; color: #e8c98a; }
+.mr-hd .mr-by { font-size: 12.5px; color: var(--cream2); }
 .pp-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; color: #f4eadf; }
 .pp-x { margin: -4px -6px 0 auto; padding: 0 6px; border: 0; background: transparent; color: var(--mute); font-size: 20px; line-height: 1; cursor: pointer; }
 .pp-x:hover { color: #fff; }

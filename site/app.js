@@ -496,6 +496,11 @@ function avHTML(n, px) {
 // under review (审核中), the line as it is and as it would be; their reviewed one, how it went; one readers fixed, a
 // dot under its time
 const DONE_TAG = { approved: ["已通过", "ok"], rejected: ["未采纳", "no"], reverted: ["已撤下", "off"] };
+// a day as the gold mark shows it: 11/19 (long: 11月19日); another year with it
+const dayOf = (s, long = false) => {
+  const d = new Date(s * 1000), y = d.getFullYear() !== new Date().getFullYear() ? (long ? `${d.getFullYear()}年` : `${String(d.getFullYear()).slice(2)}/`) : "";
+  return long ? `${y}${d.getMonth() + 1}月${d.getDate()}日` : `${y}${d.getMonth() + 1}/${d.getDate()}`;
+};
 function subRow(x, i, p) {
   const r = S.d.subs[x.i];
   if (ED && ED.part === S.part && ED.i === x.i) return rowOpen("sub editing", i, p) + `<div class="t">${hms(r[0])}</div>${editorHTML()}<div class="acts"></div></div>`;
@@ -503,12 +508,13 @@ function subRow(x, i, p) {
   const dr = DR.map.get(key), sent = !dr && !RV.on && DR.sent.get(key), ch = dr || sent, by = S.d.fixBy?.get(x.i);
   const done = !dr && !sent && !RV.on && DR.mine.get(key);   // the reader's own suggestion for it, reviewed: how it went
   const cur = rv && RV.at && RV.at.part === S.part && RV.at.t === t10(r[0]);   // reviewing: the line gone to (the keys act on it)
-  // the tag under the time (a click opens the line's card): the reader's draft, waiting, or reviewed suggestion; else a
-  // dot when someone's fix is live on it
+  // the tag under the time (a click opens the line's card): the reader's draft, waiting, or reviewed suggestion; else,
+  // when someone's fix is live on it, a quiet gold mark with the day it last changed
+  const at = by && S.d.fixAt?.get(x.i);
   const tag = (rv ? `<span class="dtag rv">待审核${rv.length > 1 ? ` ${rv.length}` : ""}</span>` : "")
             + (dr ? `<span class="dtag" data-pop="draft">待提交</span>` : sent ? `<span class="dtag sent" data-pop="sent">审核中</span>`
                : done ? `<span class="dtag ${DONE_TAG[done.status][1]}" data-pop="done">${DONE_TAG[done.status][0]}${isNew(done) ? '<i class="dnew"></i>' : ""}</span>`
-               : by ? `<i class="fixed" data-pop="fixed" data-by="${esc(by)}" title="观众校对过（${esc(by)}）"></i>` : "");
+               : by ? `<span class="fixed" data-pop="fixed" data-by="${esc(by)}" title="观众校对过（${esc(by)}）${at ? `，${dayOf(at, true)}` : ""}，点一下看修改记录">${at ? dayOf(at) : "已校对"}</span>` : "");
   const body = (ch ? changeHTML(r[2], ch.ja, "ja") + changeHTML(r[3], ch.zh, "zh")
                    : `<div class="ja" lang="ja">${hl(r[2], true)}</div><div class="zh">${hl(r[3], true)}</div>`)
              + (rv ? rv.map((s, j) => suggestionHTML(s, r, cur && j === 0)).join("") : "");
@@ -1133,9 +1139,9 @@ async function fetchFixes(part) {   // the part's live fixes, or null
 function applyFixes(d, fixes) {
   if (!d.byT) { d.byT = new Map(d.subs.map((r, i) => [t10(r[0]), i])); d.orig = new Map(); }
   for (const [i, o] of d.orig) { d.subs[i][2] = o[0]; d.subs[i][3] = o[1]; }
-  d.fixBy = new Map();
+  d.fixBy = new Map(); d.fixAt = new Map();   // who fixed a line, and when it last changed
   d.fixes = fixes || [];   // kept: reviewing here changes one line of it at a time
-  for (const [t, ja, zh, by] of fixes || []) {
+  for (const [t, ja, zh, by, at] of fixes || []) {
     const i = d.byT.get(t);
     if (i === undefined) continue;
     const r = d.subs[i];
@@ -1143,6 +1149,7 @@ function applyFixes(d, fixes) {
     if (ja !== null) r[2] = ja;
     if (zh !== null) r[3] = zh;
     d.fixBy.set(i, by);
+    d.fixAt.set(i, at || 0);
   }
 }
 
@@ -1223,7 +1230,8 @@ function editorHTML() {   // ED.review: the owner editing a waiting suggestion b
   const rv = !!ED.review;
   return `<div class="ed"><div class="ed-pair"><textarea class="ed-t" data-f="ja" lang="ja" rows="1" spellcheck="false" aria-label="日文原文">${esc(ED.ja)}</textarea>`
     + `<textarea class="ed-t" data-f="zh" rows="1" spellcheck="false" aria-label="中文翻译">${esc(ED.zh)}</textarea></div>`
-    + (rv ? "" : `<input class="ed-note" data-f="note" maxlength="300" autocomplete="off" placeholder="说明（选填）：听到的是什么、为什么这样改" value="${esc(ED.note)}">`)
+    + (rv ? "" : `<input class="ed-note" data-f="note" maxlength="300" autocomplete="off" placeholder="说明（选填，通过后大家都看得到）：听到的是什么、为什么这样改" value="${esc(ED.note)}">`)
+    + (!rv && ED.busy ? `<div class="ed-busy">这一句已有 ${ED.busy} 条别人的修改在等站长审核</div>` : "")   // two at one line: the second knows
     + `<div class="ed-btns"><button type="button" class="btn ghost" data-ed="play"><svg><use href="#i-play"/></svg>试听</button>`
     + `<span class="ed-hint">Enter ${rv ? "通过" : "完成"}　Esc 取消</span><button type="button" class="btn ghost" data-ed="cancel">取消</button>`
     + `<button type="button" class="btn main" data-ed="done">${rv ? "通过" : "完成"}</button></div></div>`;
@@ -1241,9 +1249,14 @@ function openEditor(v, vals = null) {
     if (!leaveEditor()) return;
   }
   const r = S.d.subs[x.i], key = lineKey(S.part, t10(r[0])), ch = vals || DR.map.get(key) || DR.sent.get(key);
-  ED = { part: S.part, i: x.i, t: r[0], ja: ch ? ch.ja : r[2], zh: ch ? ch.zh : r[3], note: ch?.note || "" };
+  const ed = ED = { part: S.part, i: x.i, t: r[0], ja: ch ? ch.ja : r[2], zh: ch ? ch.zh : r[3], note: ch?.note || "", busy: 0 };
   showEditor(v);
+  lineHistory(S.part, t10(r[0])).then(h => {   // others' suggestions already waiting on it: said in the editor
+    if (ED === ed && h.waiting) { ED.busy = h.waiting; redrawSubs(); }
+  }).catch(() => {});
 }
+// a line's history (/api/history); the owner's browser also gets the versions taken back off
+const lineHistory = (part, t) => { const q = `/api/history?part=${part}&t=${t}`; return adminKey() ? adminApi(q) : api(q, { uid: isBound() }); };
 function openReviewEditor(s) {   // the owner: a waiting suggestion in its row, to be put right and approved
   const i = s.part === S.part ? S.d.byT.get(s.t) : undefined, v = i === undefined ? -1 : P.subs.view.findIndex(y => y.i === i);
   if (v < 0 || (ED && !leaveEditor())) return;
@@ -1401,7 +1414,10 @@ async function openMine(tab) {
   if (!box.open) { box.showModal(); box.focus({ preventScroll: true }); MINE.shown = null; }   // opened at the top of its list
   $("mineNick").value = myNick();
   const asked = typeof tab === "string";   // (from a button's click it is the event)
-  if (asked) MINE.tab = tab; else if (DR.map.size) MINE.tab = "draft";
+  // which tab: the drafts when there are any; else all (the new results first) when some are new; else the waiting
+  // ones; chosen first from what this page already has (no empty tab flashing while the list comes), then again
+  const pick = () => (DR.map.size ? "draft" : DR.revs.some(isNew) ? "all" : DR.counts?.pending ? "pending" : DR.revs.length ? "all" : "draft");
+  MINE.tab = asked ? tab : pick();
   showKeyState(null);
   renderMine(true);
   try {
@@ -1409,7 +1425,7 @@ async function openMine(tab) {
     showKeyState(me);
     if (me.bound) { $("mineNick").value = me.nick || myNick(); $("mineTag").textContent = `#${me.tag}`; }
     MINE.fresh = new Set(DR.revs.filter(isNew).map(m => m.id));
-    if (!asked && !DR.map.size) MINE.tab = MINE.fresh.size ? "all" : DR.counts?.pending ? "pending" : DR.revs.length ? "all" : "draft";
+    if (!asked) MINE.tab = pick();
     renderMine();
     markSeen();
   } catch (e) { $("mineList").textContent = e.message; }
@@ -1471,13 +1487,14 @@ function sentHTML(m) {
 }
 
 // a line's card, opened from the tag under its time (or its dot): how the reader's own suggestion for it went (with
-// what can be done about it), or who fixed the line and what it said before. Closed by a click elsewhere, Esc, or the
+// what can be done about it), or who fixed the line; a fixed line's card also lists its history, every approved
+// version newest first down to what the data said, fetched once it is open. Closed by a click elsewhere, Esc, or the
 // subtitles scrolling.
-const POP = { i: -1 };
+const POP = { i: -1, rect: null };
 function openPop(el, i, kind) {
-  const d = S.d, r = d.subs[i], key = lineKey(S.part, t10(r[0])), o = d.orig.get(i), pop = $("linePop");
-  const before = o ? `<div class="pp-k">原来的字幕</div>${changeHTML(o[0], r[2], "ja", true)}${changeHTML(o[1], r[3], "zh", true)}` : "";
+  const d = S.d, r = d.subs[i], key = lineKey(S.part, t10(r[0])), pop = $("linePop");
   const yours = m => `<div class="pp-k">你交的</div>${changeHTML(m.before_ja, m.ja, "ja", true)}${changeHTML(m.before_zh, m.zh, "zh", true)}`;
+  const hist = `<div class="pp-hist"><p class="pp-tip">载入修改记录…</p></div>`;   // filled in below
   let head = "", body = "", btns = "";
   if (kind === "draft") {
     head = `<span class="st draft">待提交</span>还没交给站长`;
@@ -1492,7 +1509,7 @@ function openPop(el, i, kind) {
     const m = DR.mine.get(key) || {};
     if (m.status === "approved") {
       head = `<span class="st approved">已通过</span>${ago(m.updated_at)}通过`;
-      body = (m.sub_ja != null || m.sub_zh != null ? `<p class="pp-own">站长改过一点再通过。你原来写的是：${esc([m.sub_ja, m.sub_zh].filter(v => v != null).join(" ／ "))}</p>` : "") + before;
+      body = (m.sub_ja != null || m.sub_zh != null ? `<p class="pp-own">站长改过一点再通过。你原来写的是：${esc([m.sub_ja, m.sub_zh].filter(v => v != null).join(" ／ "))}</p>` : "") + hist;
     } else if (m.status === "rejected") {
       head = `<span class="st rejected">未采纳</span>${ago(m.updated_at)}审核`;
       body = `<p class="pp-no">${m.reason ? `理由：${esc(m.reason)}` : "站长没有写理由。"}</p>` + yours(m);
@@ -1502,18 +1519,86 @@ function openPop(el, i, kind) {
       body = `<p>站长把这处修改从网站上撤下了，现在显示的是之前的版本。</p>` + yours(m);
     }
   } else {   // fixed (by someone, the reader or not)
-    head = `<i class="pp-dot"></i>观众校对过`;
-    body = `<p class="pp-by">${esc(d.fixBy?.get(i) || "")}</p>` + before;
+    const at = d.fixAt?.get(i);
+    head = `<i class="pp-dot"></i>观众校对过${at ? `<span class="pp-day">${dayOf(at, true)}</span>` : ""}`;
+    body = `<p class="pp-by">${esc(d.fixBy?.get(i) || "")}</p>` + hist;
   }
   pop.innerHTML = `<div class="pp-hd">${head}<button type="button" class="pp-x" data-pa="close" aria-label="关闭">×</button></div>`
     + `<div class="pp-bd">${body}</div>${btns ? `<div class="pp-btns">${btns}</div>` : ""}`;
-  POP.i = i;
+  POP.i = i; POP.rect = el.getBoundingClientRect();
   pop.hidden = false;
-  const a = el.getBoundingClientRect(), w = Math.min(340, innerWidth - 24);   // under the tag, kept on screen
+  placePop();
+  if (!pop.querySelector(".pp-hist")) return;
+  lineHistory(S.part, t10(r[0])).then(h => {
+    if (POP.i !== i || pop.hidden) return;
+    const by = pop.querySelector(".pp-by");   // who is credited for what the line shows, field by field
+    if (by && (h.jaBy || h.zhBy)) by.textContent = h.jaBy && h.zhBy && h.jaBy !== h.zhBy ? `日文 ${h.jaBy} · 中文 ${h.zhBy}` : h.jaBy || h.zhBy;
+    pop.querySelector(".pp-hist").innerHTML = historyHTML(h, i);
+    placePop();
+  }).catch(e => { if (POP.i === i) pop.querySelector(".pp-hist").innerHTML = `<p class="pp-tip">修改记录没能载入：${esc(e.message)}</p>`; });
+}
+function placePop() {   // under the tag (above it when there is no room), kept on screen; its body scrolls when long
+  const pop = $("linePop"), a = POP.rect, w = Math.min(360, innerWidth - 24);
+  if (!a) return;
   pop.style.width = `${w}px`;
   pop.style.left = `${Math.max(12, Math.min(a.left - 10, innerWidth - w - 12))}px`;
   const h = pop.offsetHeight, below = a.bottom + 8;
-  pop.style.top = `${below + h <= innerHeight - 8 ? below : Math.max(8, a.top - h - 8)}px`;
+  pop.style.top = `${below + h <= innerHeight - 8 ? below : Math.max(8, Math.min(a.top - h - 8, innerHeight - h - 8))}px`;
+}
+// a line's versions, newest first, each with who made it, when, what it changed against the one before (field by field),
+// and whether the site shows it now; at the bottom what the data said; and how many more wait for review
+function historyHTML(h, i) {
+  const d = S.d, o = d.orig.get(i) || [d.subs[i][2], d.subs[i][3]];
+  const field = (k, n, html) => `<div class="hi-f"><span class="k">${n}</span><span class="${k}"${k === "ja" ? ' lang="ja"' : ""}>${html}</span></div>`;
+  const items = [...h.revs].reverse().map(r => {
+    const tag = r.status === "reverted" ? `<span class="hi-tag off">已撤下</span>` : r.live ? `<span class="hi-tag now">现在显示</span>` : `<span class="hi-tag old">已被后来的修改替换</span>`;
+    const f = [["ja", "日"], ["zh", "中"]].filter(([k]) => r[k] !== r[`before_${k}`]).map(([k, n]) => field(k, n, unifiedHTML(r[`before_${k}`], r[k]))).join("");
+    return `<div class="hi${r.live ? " live" : ""}${r.status === "reverted" ? " off" : ""}"><div class="hi-hd"><b>${esc(r.by)}</b>`
+      + `<span title="${dayOf(r.at, true)}">${ago(r.at)}</span>${tag}</div>${f}${r.note ? `<div class="hi-note">说明：${esc(r.note)}</div>` : ""}</div>`;
+  }).join("");
+  return `<div class="pp-k">修改记录（${h.revs.length} 次）</div><div class="hist">${items}`
+    + `<div class="hi orig"><div class="hi-hd"><b>原来</b><span>字幕数据里的</span></div>${field("ja", "日", esc(o[0]))}${field("zh", "中", esc(o[1]))}</div></div>`
+    + (h.waiting ? `<p class="pp-wait">另有 ${h.waiting} 条修改在等站长审核</p>` : "")
+    + `<p class="pp-more"><button type="button" class="linkbtn" data-pa="recent">看全站的校对记录</button></p>`;   // (a phone has no header row for it)
+}
+
+// 校对记录: the latest approved fixes across the site, newest first, by part; a click goes to the line
+const RC = { part: 0, revs: [], counts: null, more: false, busy: false };
+function openRecent() {
+  const box = $("recentBox");
+  if (!box.open) { box.showModal(); box.focus({ preventScroll: true }); }
+  loadRecent(true);
+}
+async function loadRecent(fresh = false) {
+  if (RC.busy && !fresh) return;
+  if (fresh) { RC.revs = []; RC.more = false; $("recentList").innerHTML = `<p class="mine-none">载入中…</p>`; $("recentBody").scrollTop = 0; renderRecentTabs(); }
+  RC.busy = true;
+  const want = RC.part;
+  try {
+    const r = await api(`/api/recent?limit=40&offset=${RC.revs.length}${want ? `&part=${want}` : ""}`);
+    if (want !== RC.part) return;   // another tab chosen meanwhile
+    if (r.counts) RC.counts = r.counts;
+    RC.revs.push(...r.revs); RC.more = r.revs.length === 40;
+    renderRecentTabs(); renderRecent();
+  } catch (e) { $("recentList").innerHTML = `<p class="mine-none">${esc(e.message)}</p>`; }
+  finally { RC.busy = false; }
+}
+function renderRecentTabs() {
+  const c = RC.counts || {}, all = Object.values(c).reduce((a, b) => a + b, 0);
+  $("recentTabs").innerHTML = [[0, "全部"], ...S.meta.parts.map(p => [p.part, `P${p.part}`])].map(([p, w]) => {
+    const n = p ? c[p] || 0 : all;
+    return `<button type="button" class="mtab${RC.part === p ? " on" : ""}${RC.counts && !n ? " zero" : ""}" data-rp="${p}">${w}${RC.counts ? `<b>${n}</b>` : ""}</button>`;
+  }).join("");
+}
+function renderRecent() {
+  $("recentList").innerHTML = RC.revs.length ? RC.revs.map(r => `<div class="mitem" data-part="${r.part}" data-t="${r.t}">`
+      + `<div class="mr-hd"><b>P${r.part} ${hms(r.t / 10)}</b><span class="mr-by">${esc(r.by)}</span><span class="when">${ago(r.at)}通过</span>`
+      + (r.live ? "" : `<span class="st reverted">已被替换</span>`)
+      + `<span class="mr-acts"><button type="button" class="mr-b" data-r="go">跳到这句</button></span></div>`
+      + `<div class="mbody">${changeHTML(r.before_ja, r.ja, "ja", true)}${changeHTML(r.before_zh, r.zh, "zh", true)}</div>`
+      + (r.note ? `<div class="mr-why">说明：${esc(r.note)}</div>` : "") + `</div>`).join("")
+    : `<p class="mine-none">${RC.part ? "这一P" : ""}还没有通过的修改。</p>`;
+  $("recentFoot").hidden = !RC.more;
 }
 function hidePop() { if (!$("linePop").hidden) { $("linePop").hidden = true; POP.i = -1; } }
 function popAct(a) {
@@ -1521,6 +1606,7 @@ function popAct(a) {
   hidePop();
   if (a === "close" || i < 0 || !S.d) return;
   const v = P.subs.view.findIndex(y => y.i === i), key = lineKey(S.part, t10(S.d.subs[i][0]));
+  if (a === "recent") { openRecent(); return; }
   if (a === "mine") openMine("draft");
   else if (a === "edit" && v >= 0) openEditor(v);
   else if (a === "redo" && v >= 0) { const m = DR.mine.get(key); openEditor(v, m ? { ja: m.ja, zh: m.zh, note: m.note || "" } : null); }
@@ -1679,7 +1765,7 @@ async function reviewSend(s, action, extra = {}) {
 function liveLine(rev) {   // a line's live fixes as the Worker's answer gives them, laid over this part's data
   if (!S.d || S.part !== rev.part) return;
   const L = rev.live, fixes = (S.d.fixes || []).filter(f => f[0] !== rev.t);
-  if (L && (L.ja !== null || L.zh !== null)) fixes.push([rev.t, L.ja, L.zh, L.by]);
+  if (L && (L.ja !== null || L.zh !== null)) fixes.push([rev.t, L.ja, L.zh, L.by, L.at]);
   applyFixes(S.d, fixes);
   for (const x of S.items.subs) x.f = undefined;   // the search's folded text
 }
@@ -1951,7 +2037,17 @@ function wire() {
     box.focus({ preventScroll: true });
   });
   for (const b of document.querySelectorAll("dialog [data-close]")) b.addEventListener("click", () => b.closest("dialog").close());
-  for (const d of [$("about"), $("mineBox")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });   // a click outside it
+  for (const d of [$("about"), $("mineBox"), $("recentBox")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });   // a click outside it
+  $("recentBtn").addEventListener("click", openRecent);
+  $("recentBtn2").addEventListener("click", () => { $("about").close(); openRecent(); });
+  $("recentTabs").addEventListener("click", e => { const b = e.target.closest("[data-rp]"); if (b && +b.dataset.rp !== RC.part) { RC.part = +b.dataset.rp; loadRecent(true); } });
+  $("recentMore").addEventListener("click", () => loadRecent());
+  $("recentList").addEventListener("click", e => {   // 跳到这句: there, a little after its start (the current line then)
+    const it = e.target.closest("[data-r]")?.closest(".mitem");
+    if (!it) return;
+    $("recentBox").close();
+    location.hash = `#p=${it.dataset.part}&t=${hms(Math.ceil(+it.dataset.t / 10))}`;
+  });
 
   // proofreading: the line being edited in its row (typed into: it grows, the rows under it move down; Enter keeps
   // it as a draft, Esc drops the edit; an IME's own Enter only picks its words), the drafts' bar, 我的校对
@@ -1991,7 +2087,10 @@ function wire() {
   document.addEventListener("pointerdown", e => {   // a click anywhere but the card (or another tag) closes it
     if (!$("linePop").hidden && !e.target.closest("#linePop, [data-pop]")) hidePop();
   }, true);
-  P.subs.list.addEventListener("scroll", hidePop, { passive: true });
+  // scrolled by the reader's wheel or finger closes it, not the list settling after an edit or a keypress (its bar:
+  // pressing it is a click outside the card, which closes it)
+  for (const ev of ["wheel", "touchmove"]) P.subs.list.addEventListener(ev, () => { POP.scrolledAt = performance.now(); }, { passive: true });
+  P.subs.list.addEventListener("scroll", () => { if (performance.now() - (POP.scrolledAt || 0) < 900) hidePop(); }, { passive: true });
   window.addEventListener("resize", hidePop);
   document.addEventListener("visibilitychange", () => {   // back on the tab: results may have come in, more may wait
     if (document.hidden) return;

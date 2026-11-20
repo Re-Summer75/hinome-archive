@@ -128,7 +128,8 @@
         <img class="cut corner" src="assets/cut_sc_corner.webp" alt="">
         <div class="phd"><div class="ptitle"><b>SUBTITLES</b><span>字幕<em id="countSubs"></em></span></div></div>
         <div class="cols"><span class="ja">日文原文</span><span class="zh">中文翻译</span>
-          <button class="chip mention" id="mention" type="button" hidden title="只看她念到或提到这位观众的字幕">提到 TA<i></i></button></div>
+          <span class="colbtns"><button class="chip" id="recentBtn" type="button" title="观众最近校对、站长审核通过的字幕">校对记录</button>
+            <button class="chip mention" id="mention" type="button" hidden title="只看她念到或提到这位观众的字幕">提到 TA<i></i></button></span></div>
         <div class="list" tabindex="-1"><div class="spacer"></div></div>
         <div class="dbar wbar" id="draftBar" hidden>
           <div class="wseg" id="mineSeg"><span class="wtxt" id="draftN"></span><button type="button" class="btn main" id="draftGo">查看并提交</button></div>
@@ -183,6 +184,17 @@
   <div class="sh-foot" id="draftFoot" hidden><button type="button" class="btn ghost" id="draftDrop">全部撤销</button><button type="button" class="btn main" id="draftSend">全部提交</button></div>
 </dialog>
 
+<dialog class="about sheet frame" id="recentBox" tabindex="-1" aria-labelledby="recentTitle">
+  <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
+  <div class="sh-head">
+    <div class="sh-top"><h2 id="recentTitle">校对记录</h2><button type="button" class="sh-x" data-close title="关闭（Esc）" aria-label="关闭">×</button></div>
+    <p class="mine-help">观众校对、站长审核通过的修改，新的在上。「已被替换」是后来又有人改过的。</p>
+    <nav class="mine-tabs" id="recentTabs" aria-label="按分P看"></nav>
+  </div>
+  <div class="sh-body" id="recentBody"><div class="mine-list" id="recentList"></div></div>
+  <div class="sh-foot" id="recentFoot" hidden><button type="button" class="btn" id="recentMore">加载更多</button></div>
+</dialog>
+
 <dialog class="about keybox frame" id="keyBox" tabindex="-1">
   <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
   <h2>校对密钥</h2>
@@ -212,8 +224,8 @@
     <li>本页播放为 360P（省流量、加载快）；想看高清请点「在B站打开当前位置」。</li>
   </ul>
   <h3>参与校对</h3>
-  <p>校对需要站长发的<b>校对密钥</b>：第一次点某一句右边的 <svg class="ico"><use href="#i-pen"/></svg> 时输入，一个密钥最多用在 3 个浏览器上。之后直接在那一行里改日文或中文（可以先试听），按 Enter 或「完成」，这一句就标上「待提交」，可以接着改别的；都改好了，点字幕栏下方的「查看并提交」一起交。交了以后，字幕栏下方一直有「我的校对」，看得到每一处是审核中、已通过还是未采纳；字幕行里也标着结果，点一下标记能看详情，比如未采纳的理由。审核通过的句子会直接换成新的，时间下面多一个小金点，点一下能看到是谁校对的、原来是什么。
-    <button type="button" class="btn ghost mine-open" id="mineBtn">我的校对</button></p>
+  <p>校对需要站长发的<b>校对密钥</b>：第一次点某一句右边的 <svg class="ico"><use href="#i-pen"/></svg> 时输入，一个密钥最多用在 3 个浏览器上。之后直接在那一行里改日文或中文（可以先试听），按 Enter 或「完成」，这一句就标上「待提交」，可以接着改别的；都改好了，点字幕栏下方的「查看并提交」一起交。交了以后，字幕栏下方一直有「我的校对」，看得到每一处是审核中、已通过还是未采纳；字幕行里也标着结果，点一下标记能看详情，比如未采纳的理由。审核通过的句子会直接换成新的，时间下面用金色小字标出校对的日期，点一下能看到是谁改的、每一次改了什么、写的说明和原来的字幕；「校对记录」按时间列出全站最近的修改。写的说明在通过后大家都看得到。
+    <button type="button" class="btn ghost mine-open" id="mineBtn">我的校对</button><button type="button" class="btn ghost mine-open" id="recentBtn2">校对记录</button></p>
   <h3>数据</h3>
   <ul>
     <li><b>字幕</b>：三个语音识别模型听写，Gemini 整理翻译，再经二审、三审。难免有误，请保持怀疑。观众校对并审核通过的句子会直接换上，所以个别句子可能和视频里烧录的字幕不同。</li>
