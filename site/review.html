@@ -18,6 +18,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* above any display set below (the bulk bar's flex) */
 body { margin: 0; background: var(--ink); color: var(--cream); font: 14px/1.6 var(--sans); }
 button, input, select, textarea { font: inherit; color: inherit; }
 .hd { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 12px 20px;

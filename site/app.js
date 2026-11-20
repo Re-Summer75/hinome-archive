@@ -1389,7 +1389,7 @@ function showKeyState(me) {   // me: from /api/me; null while it loads (then as 
   $("mineUnbind").hidden = !(me ? me.bound : isBound());
   $("mineState").innerHTML = !me ? (bound ? "" : NO_KEY)
     : me.revoked ? "你的校对密钥已被停用，有疑问请联系站长。"
-    : me.bound ? `这个浏览器已绑定校对密钥（这个密钥用在 <b>${me.devices}/${me.max}</b> 个浏览器上）。换浏览器或手机时输入同一个密钥，署名和交过的修改都在。`
+    : me.bound ? `已绑定校对密钥，这个密钥用在 <b>${me.devices}/${me.max}</b> 个浏览器上。`
     : NO_KEY;
 }
 // tabs: the drafts, then the sent ones by what became of them. Opened on the drafts when there are any, else on all (the
@@ -1398,7 +1398,7 @@ const MINE_TABS = [["draft", "待提交"], ["pending", "审核中"], ["approved"
 const MINE = { tab: "draft", fresh: new Set() };   // the tab shown; the results that were new when the box opened (marked 新)
 async function openMine(tab) {
   const box = $("mineBox");
-  if (!box.open) { box.showModal(); box.scrollTop = 0; }
+  if (!box.open) { box.showModal(); box.focus({ preventScroll: true }); MINE.shown = null; }   // opened at the top of its list
   $("mineNick").value = myNick();
   const asked = typeof tab === "string";   // (from a button's click it is the event)
   if (asked) MINE.tab = tab; else if (DR.map.size) MINE.tab = "draft";
@@ -1426,6 +1426,8 @@ function renderMine(loading = false) {
     + `${w}<b>${count(s)}</b>${fresh(s) ? '<i class="dnew" title="有新结果"></i>' : ""}</button>`).join("");
   $("draftPane").hidden = MINE.tab !== "draft";
   $("sentPane").hidden = MINE.tab === "draft";
+  $("draftFoot").hidden = MINE.tab !== "draft" || !DR.map.size;   // 全部提交 always in sight, at the bottom
+  if (MINE.shown !== MINE.tab) { $("mineBody").scrollTop = 0; MINE.shown = MINE.tab; }   // another tab: from its top
   if (MINE.tab === "draft") renderDrafts();
   else if (loading && !DR.revs.length) $("mineList").innerHTML = `<p class="mine-none">载入中…</p>`;
   else renderSent();
@@ -1945,9 +1947,11 @@ function wire() {
   $("aboutBtn").addEventListener("click", () => {   // opened at its top, the box itself focused (no ring on a link or the button)
     const box = $("about");
     box.showModal();
-    box.scrollTop = 0;
+    $("aboutBody").scrollTop = 0;
     box.focus({ preventScroll: true });
   });
+  for (const b of document.querySelectorAll("dialog [data-close]")) b.addEventListener("click", () => b.closest("dialog").close());
+  for (const d of [$("about"), $("mineBox")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });   // a click outside it
 
   // proofreading: the line being edited in its row (typed into: it grows, the rows under it move down; Enter keeps
   // it as a draft, Esc drops the edit; an IME's own Enter only picks its words), the drafts' bar, 我的校对

@@ -459,6 +459,19 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .about li { margin: 4px 0; }
 .about b { color: #f4eadf; font-weight: 600; }
 .about form { margin-top: 14px; text-align: right; }
+/* a box whose content can run long (说明, 我的校对): the title and its × stay at the top and the actions at the bottom,
+   only the middle scrolls; Esc or a click outside closes it too */
+.about.sheet { padding: 0; }
+.about.sheet[open] { display: flex; flex-direction: column; max-height: min(88vh, 900px); max-height: min(88dvh, 900px); overflow: hidden; }
+.sh-head { flex: none; padding: 20px 30px 0; }
+.sh-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.about .sh-top h2 { margin: 0; }
+.sh-x { flex: none; width: 34px; height: 34px; margin: -6px -12px 0 auto; padding: 0; border: 1px solid transparent; border-radius: 50%; background: transparent;
+  color: var(--mute); font-size: 24px; line-height: 1; cursor: pointer; }
+.sh-x:hover, .sh-x:focus-visible { border-color: var(--line); color: #fff; outline: none; }
+.sh-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 30px 20px; }
+.sh-foot { flex: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 12px 30px 16px; border-top: 1px solid var(--line2);
+  background: rgba(0, 0, 0, .22); }
 .about .ico { width: 14px; height: 14px; vertical-align: -2px; }
 .about .mine-open { margin-left: 6px; padding: 3px 10px; vertical-align: 1px; }
 
@@ -573,11 +586,11 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .mine-help { margin: 0 0 8px; font-size: 12.5px; color: var(--mute); }
 .mine-btns, .mine-send { display: flex; flex-wrap: wrap; gap: 8px; }
 .mine-btns { margin: 2px 0 6px; }
-.mine-foot { margin-top: 14px; }
-.mine-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
-.mine-end form { margin: 0 0 0 auto; }
-.mine-end #mineUnbind { padding: 3px 10px; font-size: 12px; color: var(--mute); }
-.mine-end #mineUnbind:hover { color: var(--cream2); }
+.mine-foot { margin: 14px 0 0; }
+.mine-bind { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 4px; }
+.mine-bind .mine-help { margin: 0; }
+.linkbtn { padding: 0; border: 0; background: transparent; color: var(--mute2); font: inherit; font-size: 12px; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.linkbtn:hover { color: var(--cream2); }
 body.lowbar .toast { bottom: 110px; }   /* off the bar under the subtitles */
 .keybox { max-width: 440px; }
 .keybox p { margin: 0 0 10px; }
@@ -643,6 +656,9 @@ kbd { padding: 0 5px; border: 1px solid var(--line); border-radius: 3px; font-si
   .clock { display: none; }   /* the now bar under the player has it */
   .status { margin: 0 10px 0 auto; padding-left: 10px; }   /* a gap from the name even when the row is tight */
   .about-btn { flex: none; white-space: nowrap; margin-right: 8px; padding: 5px 9px; letter-spacing: 1px; }
+  .sh-head { padding: 16px 20px 0; }
+  .sh-body { padding: 0 20px 16px; }
+  .sh-foot { padding: 10px 20px 12px; }
   .parts { gap: 13px; }
   .part + .part::after { left: -8.5px; }
   .part { flex: 1 1 0; justify-content: center; padding: 0 6px; gap: 6px; } .part .p::before { display: none; }

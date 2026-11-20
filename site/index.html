@@ -165,21 +165,22 @@
 <div class="toast" id="toast" role="status"></div>
 <div class="pop" id="linePop" role="dialog" hidden></div>
 
-<dialog class="about mine frame" id="mineBox" tabindex="-1">
+<dialog class="about mine sheet frame" id="mineBox" tabindex="-1" aria-labelledby="mineTitle">
   <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
-  <h2>我的校对</h2>
-  <p class="mine-help" id="mineState"></p>
-  <div class="mine-id" id="mineNickRow"><label>署名<input id="mineNick" maxlength="20" placeholder="匿名" autocomplete="off"></label>
-    <span class="mine-tag" id="mineTag"></span><button type="button" class="btn" id="mineSave">保存</button></div>
-  <div class="mine-btns"><button type="button" class="btn main" id="mineKeyBtn">输入校对密钥</button></div>
-  <nav class="mine-tabs" id="mineTabs" aria-label="按状态看"></nav>
-  <div id="draftPane">
-    <div class="mine-list" id="draftList"></div>
-    <div class="mine-send"><button type="button" class="btn ghost" id="draftDrop">全部撤销</button><button type="button" class="btn main" id="draftSend">全部提交</button></div>
+  <div class="sh-head">
+    <div class="sh-top"><h2 id="mineTitle">我的校对</h2><button type="button" class="sh-x" data-close title="关闭（Esc）" aria-label="关闭">×</button></div>
+    <div class="mine-id" id="mineNickRow"><label>署名<input id="mineNick" maxlength="20" placeholder="匿名" autocomplete="off"></label>
+      <span class="mine-tag" id="mineTag" title="名字后面的 # 和四个字符用来区分同名的人"></span><button type="button" class="btn" id="mineSave">保存</button></div>
+    <div class="mine-bind"><span class="mine-help" id="mineState"></span><button type="button" class="linkbtn" id="mineUnbind" title="解除这个浏览器的绑定">解除绑定</button>
+      <button type="button" class="btn main" id="mineKeyBtn">输入校对密钥</button></div>
+    <nav class="mine-tabs" id="mineTabs" aria-label="按状态看"></nav>
   </div>
-  <div id="sentPane" hidden><div class="mine-list" id="mineList"></div></div>
-  <p class="mine-help mine-foot">名字后面的 # 和四个字符用来区分同名的人。还没提交的修改只存在这个浏览器里；清除浏览器数据或用无痕窗口，会被当成新的浏览器。</p>
-  <div class="mine-end"><button type="button" class="btn ghost" id="mineUnbind">解除这个浏览器的绑定</button><form method="dialog"><button class="btn">关闭</button></form></div>
+  <div class="sh-body" id="mineBody">
+    <div id="draftPane"><div class="mine-list" id="draftList"></div></div>
+    <div id="sentPane" hidden><div class="mine-list" id="mineList"></div></div>
+    <p class="mine-help mine-foot">换浏览器或手机时输入同一个密钥，署名和交过的修改都在。还没提交的修改只存在这个浏览器里；清除浏览器数据或用无痕窗口，会被当成新的浏览器。</p>
+  </div>
+  <div class="sh-foot" id="draftFoot" hidden><button type="button" class="btn ghost" id="draftDrop">全部撤销</button><button type="button" class="btn main" id="draftSend">全部提交</button></div>
 </dialog>
 
 <dialog class="about keybox frame" id="keyBox" tabindex="-1">
@@ -191,9 +192,10 @@
     <div class="key-btns"><button type="button" class="btn ghost" id="keyCancel">取消</button><button class="btn main" id="keyGo">确定</button></div></form>
 </dialog>
 
-<dialog class="about frame" id="about" tabindex="-1">
+<dialog class="about sheet frame" id="about" tabindex="-1" aria-labelledby="aboutTitle">
   <svg class="fil tl"><use href="#fan"/></svg><svg class="fil br"><use href="#fan"/></svg>
-  <h2>说明</h2>
+  <div class="sh-head"><div class="sh-top"><h2 id="aboutTitle">说明</h2><button type="button" class="sh-x" data-close title="关闭（Esc）" aria-label="关闭">×</button></div></div>
+  <div class="sh-body" id="aboutBody">
   <p>本页收录火羽ひのめ 2022 年 10 月 10 日至 13 日四场 B 站直播的回放字幕和直播间记录，对应 B 站视频
     <a href="https://www.bilibili.com/video/BV1v1HN6YEyV" target="_blank" rel="noopener">BV1v1HN6YEyV</a> 的四个分 P。</p>
   <ul>
@@ -221,7 +223,7 @@
     <li><b>北京时间</b>：按弹幕发送时间推算的直播实况时间，仅供参考；10 号录像有两处断档。</li>
     <li><b>舰长数</b>：第三方统计站 vtbs.moe 的历史记录，两次记录之间按上舰消息逐个累加，仅供参考。</li>
   </ul>
-  <form method="dialog"><button class="btn">知道了</button></form>
+  </div>
 </dialog>
 
 <script src="stream.js"></script>
