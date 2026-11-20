@@ -1,11 +1,11 @@
 /* The archive page, in the live room's dress (room/room.html): ink paper, cream text, thin gold lines,
    fan corners, Noto Serif SC for the page's own words. Content text uses the reader's fonts.
    Three panes keep apart what the live room keeps apart: what she says, the chat, the super chats. */
-@font-face { font-family: "Hinome Serif"; font-weight: 400; font-display: swap; src: url("assets/serif-400.woff2") format("woff2"); }
-@font-face { font-family: "Hinome Serif"; font-weight: 600; font-display: swap; src: url("assets/serif-600.woff2") format("woff2"); }
-@font-face { font-family: "Hinome Serif"; font-weight: 700; font-display: swap; src: url("assets/serif-700.woff2") format("woff2"); }
-@font-face { font-family: "Hinome Serif"; font-weight: 500; font-display: swap; src: url("assets/serif-500.woff2") format("woff2"); }
-@font-face { font-family: "Hinome Serif"; font-weight: 900; font-display: swap; src: url("assets/serif-900.woff2") format("woff2"); }
+@font-face { font-family: "Hinome Serif"; font-weight: 400; font-display: swap; src: url("assets/serif-400.woff2?v=e1b6f4e8ff") format("woff2"); }
+@font-face { font-family: "Hinome Serif"; font-weight: 600; font-display: swap; src: url("assets/serif-600.woff2?v=d4eba851c9") format("woff2"); }
+@font-face { font-family: "Hinome Serif"; font-weight: 700; font-display: swap; src: url("assets/serif-700.woff2?v=34de3fd11d") format("woff2"); }
+@font-face { font-family: "Hinome Serif"; font-weight: 500; font-display: swap; src: url("assets/serif-500.woff2?v=ae531b16fa") format("woff2"); }
+@font-face { font-family: "Hinome Serif"; font-weight: 900; font-display: swap; src: url("assets/serif-900.woff2?v=c7ee93606a") format("woff2"); }
 
 :root {
   --ink: #141316; --ink2: #1b1a1e; --cream: #ede5d8; --cream2: #d8cfc1; --mute: #a69c8e; --mute2: #6f675e;
@@ -32,7 +32,7 @@ html, body { height: 100%; margin: 0; }
 body { display: flow-root; color: var(--cream); font: 15px/1.6 var(--sans); overflow: hidden;   /* flow-root: the header's top margin stays inside */
   /* the paper's grain toned down: a veil of its own mean colour over it (35%: the grain's contrast down by as much, the tone the same) */
   background: linear-gradient(rgba(23, 24, 25, .35), rgba(23, 24, 25, .35)), linear-gradient(rgba(8, 15, 16, .38), rgba(8, 15, 16, .38)),
-    var(--ink) url("assets/paper_dark.webp") center / cover fixed; }
+    var(--ink) url("assets/paper_dark.webp?v=895f657710") center / cover fixed; }
 button, input { font: inherit; color: inherit; }
 /* scroll bars: the browser's, thin and in the page's colours; over the long lists the page's own (app.js Bar),
    in the same look */
@@ -400,23 +400,23 @@ mark.w { background: rgba(200, 70, 55, .42); }
 .tag { position: relative; display: flex; --seal: #3b6ea8; --amt: #2c508c; }
 .tag .stripe { width: 10px; flex: none; margin: 1.5px 0; border-radius: 5px 0 0 5px; background: left top / 10px auto repeat-y;
   box-shadow: inset -1px 0 0 rgba(70, 10, 6, .4), 0 1px 3px rgba(0, 0, 0, .35); }
-.stripe.s6 { background-image: url("assets/cut_stripe_red.webp"); }
-.stripe.s5 { background-image: url("assets/cut_stripe_red.webp"); filter: hue-rotate(-24deg); }
-.stripe.s4 { background-image: url("assets/cut_stripe_gold.webp"); filter: hue-rotate(-14deg) saturate(1.25); }
-.stripe.s3 { background-image: url("assets/cut_stripe_gold.webp"); }
-.stripe.s2 { background-image: url("assets/cut_stripe_teal.webp"); }
-.stripe.s1 { background-image: url("assets/cut_stripe_teal.webp"); filter: hue-rotate(18deg); }
-.stripe.s0 { background-image: url("assets/cut_stripe_teal.webp"); filter: hue-rotate(42deg); }
+.stripe.s6 { background-image: url("assets/cut_stripe_red.webp?v=8b9d32b287"); }
+.stripe.s5 { background-image: url("assets/cut_stripe_red.webp?v=8b9d32b287"); filter: hue-rotate(-24deg); }
+.stripe.s4 { background-image: url("assets/cut_stripe_gold.webp?v=1a21d2ef43"); filter: hue-rotate(-14deg) saturate(1.25); }
+.stripe.s3 { background-image: url("assets/cut_stripe_gold.webp?v=1a21d2ef43"); }
+.stripe.s2 { background-image: url("assets/cut_stripe_teal.webp?v=6f215e1c5a"); }
+.stripe.s1 { background-image: url("assets/cut_stripe_teal.webp?v=6f215e1c5a"); filter: hue-rotate(18deg); }
+.stripe.s0 { background-image: url("assets/cut_stripe_teal.webp?v=6f215e1c5a"); filter: hue-rotate(42deg); }
 .tag .paper { position: relative; flex: 1; min-width: 0; padding: 9px 14px 10px 14px; color: #3a3f4a; border-radius: 4px 5px 5px 4px; transition: box-shadow .35s ease;
   box-shadow: inset 0 0 0 1px rgba(105, 92, 84, .25), 0 3px 8px rgba(0, 0, 0, .45);
-  background: linear-gradient(rgba(230, 213, 210, .62), rgba(230, 213, 210, .62)), var(--paper) url("assets/paper_cream.webp") center / 640px auto; }
+  background: linear-gradient(rgba(230, 213, 210, .62), rgba(230, 213, 210, .62)), var(--paper) url("assets/paper_cream.webp?v=67987a594d") center / 640px auto; }
 .tag .mark { position: absolute; right: 6px; top: 8px; width: 64px; height: 64px; background: center top / contain no-repeat; opacity: .42; pointer-events: none; }
-.mark.m5, .mark.m6 { background-image: url("assets/wm_flower.webp"); opacity: .6; }
-.mark.m3 { background-image: url("assets/wm_gold.webp"); opacity: .64; }
-.mark.m4 { background-image: url("assets/wm_gold.webp"); filter: hue-rotate(-16deg) saturate(1.15); opacity: .64; }
-.mark.m2 { background-image: url("assets/wm_teal.webp"); }
-.mark.m1 { background-image: url("assets/wm_teal.webp"); filter: hue-rotate(14deg); }
-.mark.m0 { background-image: url("assets/wm_teal.webp"); filter: hue-rotate(38deg); }
+.mark.m5, .mark.m6 { background-image: url("assets/wm_flower.webp?v=d08914ab5d"); opacity: .6; }
+.mark.m3 { background-image: url("assets/wm_gold.webp?v=fbcc6a71bc"); opacity: .64; }
+.mark.m4 { background-image: url("assets/wm_gold.webp?v=fbcc6a71bc"); filter: hue-rotate(-16deg) saturate(1.15); opacity: .64; }
+.mark.m2 { background-image: url("assets/wm_teal.webp?v=0dec903fb4"); }
+.mark.m1 { background-image: url("assets/wm_teal.webp?v=0dec903fb4"); filter: hue-rotate(14deg); }
+.mark.m0 { background-image: url("assets/wm_teal.webp?v=0dec903fb4"); filter: hue-rotate(38deg); }
 .tag .hd { position: relative; display: flex; align-items: center; gap: 10px; }
 .tag .seal { width: 34px; height: 34px; border-radius: 50%; background: var(--seal); flex: none; display: flex; align-items: center; justify-content: center;
   font: 600 16px var(--serif); color: #fbf6ee; }

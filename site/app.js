@@ -553,8 +553,8 @@ function scRow(x, i, p) {
 }
 
 // ---------------------------------------------------------------- data and filters
-async function loadJSON(url) {
-  const r = await fetch(url);
+async function loadJSON(url) {   // asking the server each time: a rebuilt data file shows at once (an unchanged one: a 304)
+  const r = await fetch(url, { cache: "no-cache" });
   if (!r.ok) throw new Error(`${url}: ${r.status}`);
   return r.json();
 }

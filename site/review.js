@@ -64,7 +64,7 @@ function login(err = "") {
 }
 
 // a part's data: the lines' own text, and the neighbours of the one a suggestion is for
-const partData = p => (R.data[p] ||= fetch(`data/p${p}.json`).then(r => r.json())
+const partData = p => (R.data[p] ||= fetch(`data/p${p}.json`, { cache: "no-cache" }).then(r => r.json())
   .then(d => ({ subs: d.subs, byT: new Map(d.subs.map((s, i) => [Math.round(s[0] * 10), i])) })));
 
 // a character diff by the longest common subsequence: [op, text], op -1 taken out, 0 kept, 1 put in
